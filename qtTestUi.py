@@ -33,28 +33,32 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
                     res.append(j)
         return res
 
-    def updateglobal(self, row_id_w, row_id_in):
+    def updateglobal(self, row_id_w, row_id_in, itm):
         try:
             self.statwaiting.removeRow(row_id_w)
             self.statinproc.removeRow(row_id_in)
+            itm_w = self.statwaiting.findItems(str(itm), ss.Qt.MatchContains)
+            itm_int = self.statwaiting.findItems(str(itm), ss.Qt.MatchContains)
+            self.statfinish.removeRow(itm_w[0].row())
+            self.statinproc.removeRow(itm_int[0].row())
         except:
             pass
 
-    def updatecardio(self, rowid):
+    def updatecardio(self):
         try:
-            self.cardiowaiting.removeRow(rowid)
+            self.cardiowaiting.removeRow(0)
         except:
             pass
 
-    def updatederma(self, rowid):
+    def updatederma(self):
         try:
-            self.dermawaiting.removeRow(rowid)
+            self.dermawaiting.removeRow(0)
         except:
             pass
 
-    def updateortho(self, rowid):
+    def updateortho(self):
         try:
-            self.orthowaiting.removeRow(rowid)
+            self.orthowaiting.removeRow(0)
         except:
             pass
 
@@ -118,6 +122,7 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
                 self.orthowaiting.setItem(rowPosition1, 1, item2)
                 self.orthowaiting.setItem(rowPosition1, 2, item3)
                 self.orthowaiting.setItem(rowPosition1, 3, item4)
+                print(rowPosition1)
                 return rowPosition1
         elif typeof == 'finished':
             matching_items1 = self.orthofinish.findItems(str(itm['tid']), ss.Qt.MatchContains)
@@ -192,17 +197,18 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
                 self.cardiofinish.setItem(rowPosition3, 3, item4)
                 return rowPosition3
 
-    def patientC(self, data):
+    def patientC(self, data, i):
         data['tid'] = threading.get_native_id()
         row_id_w_g = self.addglobaltables(data)  # global waiting
         row_id_w_c = self.addcardiotables(data)  # cardio waiting
         while True:
             time.sleep(0.5)
-            if self.semaC._value == 1:
+            if self.semaC._value == 1 and i == self.dermafinished.rowCount():
                 self.semaC.acquire(self)
                 self.cardioname.setText(data['name'])
                 data['status'] = 'inprocess'
                 # show inprocess global/ cardio
+
                 row_id_in_g = self.addglobaltables(data)  # global inprocess
                 counter = data['estime']
                 while counter >= 0:
@@ -210,22 +216,23 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
                     self.cardiotime.setText(str(counter))
                     counter -= 1
                 data['status'] = 'finished'
-                self.semaC.release()
+
                 # delete from waiting global/cardio
-                self.updateglobal(row_id_w_g, row_id_in_g)  # global remove waiting
-                self.updatecardio(row_id_w_c)  # cardio remove waiting
+                self.updateglobal(row_id_w_g, row_id_in_g, data['tid'])  # global remove waiting
+                self.updatecardio()  # cardio remove waiting
                 # show in finished globa/cardio
                 self.addglobaltables(data)  # finished global add
                 self.addcardiotables(data)  # finished cardio add
-                return
+                self.semaC.release()
+                break
 
-    def patientO(self, data):
+    def patientO(self, data, i):
         data['tid'] = threading.get_native_id()
         row_id_w_g = self.addglobaltables(data)  # global waiting
         row_id_w_c = self.addorthotables(data)  # ortho waiting
         while True:
             time.sleep(0.5)
-            if self.semaO._value == 1:
+            if self.semaO._value == 1 and i == self.orthofinish.rowCount():
                 self.semaO.acquire(self)
                 self.orthoname.setText(data['name'])
                 data['status'] = 'inprocess'
@@ -237,14 +244,14 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
                     self.orthotime.setText(str(counter))
                     counter -= 1
                 data['status'] = 'finished'
-                self.semaO.release()
                 # delete from waiting global/ortho
-                self.updateglobal(row_id_w_g, row_id_in_g)  # global remove waiting
-                self.updateortho(row_id_w_c)  # ortho remove waiting
+                self.updateglobal(row_id_w_g, row_id_in_g, data['tid'])  # global remove waiting
+                self.updateortho()  # ortho remove waiting
                 # show in finished globa/ortho
                 self.addglobaltables(data)  # finished global add
                 self.addorthotables(data)  # finished ortho add
-                return
+                self.semaO.release()
+                break
 
     def patientD(self, data, i):
         data['tid'] = threading.get_native_id()
@@ -252,7 +259,7 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
         row_id_w_c = self.adddematables(data)  # derma waiting
         while True:
             time.sleep(0.5)
-            if self.semaD._value == 1 and i == self.dermafinished.rowCount():
+            if self.semaD._value == 1 and i == self.dermafinished.rowCount():  # schedualing
                 self.semaD.acquire(self)
                 self.dermaname.setText(data['name'])
                 data['status'] = 'inprocess'
@@ -264,14 +271,15 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
                     self.dermatime.setText(str(counter))
                     counter -= 1
                 data['status'] = 'finished'
-                self.semaD.release()
+
                 # delete from waiting global/derma
-                self.updateglobal(row_id_w_g, row_id_in_g)  # global remove waiting
-                self.updatederma(row_id_w_c)  # derma remove waiting
+                self.updateglobal(row_id_w_g, row_id_in_g, data['tid'])  # global remove waiting
+                self.updatederma()  # derma remove waiting
                 # show in finished globa/derma
                 self.addglobaltables(data)  # finished global add
                 self.adddematables(data)  # finished derma add
-                return
+                self.semaD.release()
+                break
 
     def monitoring(self):
         while self.prog_status == True or len(self.threads) > 0:
@@ -283,15 +291,15 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
                 pass
 
     def schedualing_ortho(self):
-        for per in self.doctor_review['o']:
+        for i, per in enumerate(self.doctor_review['o']):
             per['status'] = 'waiting'
-            runthrd = threading.Thread(target=self.patientO, args=(per,))
+            runthrd = threading.Thread(target=self.patientO, args=(per, i,))
             runthrd.start()
 
     def schedualing_cardio(self):
-        for per in self.doctor_review['c']:
+        for i, per in enumerate(self.doctor_review['c']):
             per['status'] = 'waiting'
-            runthrd = threading.Thread(target=self.patientC, args=(per,))
+            runthrd = threading.Thread(target=self.patientC, args=(per, i,))
             runthrd.start()
 
     def schedualing_dema(self):
