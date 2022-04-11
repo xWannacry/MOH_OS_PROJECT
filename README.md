@@ -2,3 +2,8 @@
 
 OS PROJECT
 initial
+
+
+pyqt5
+pyqt5-tools
+pyside2
