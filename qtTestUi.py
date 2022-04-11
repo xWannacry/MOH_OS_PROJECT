@@ -33,14 +33,10 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
                     res.append(j)
         return res
 
-    def updateglobal(self, row_id_w, row_id_in, itm):
+    def updateglobal(self, row_id_w, row_id_in):
         try:
             self.statwaiting.removeRow(row_id_w)
             self.statinproc.removeRow(row_id_in)
-            itm_w = self.statwaiting.findItems(str(itm), ss.Qt.MatchContains)
-            itm_int = self.statwaiting.findItems(str(itm), ss.Qt.MatchContains)
-            self.statfinish.removeRow(itm_w[0].row())
-            self.statinproc.removeRow(itm_int[0].row())
         except:
             pass
 
@@ -197,18 +193,17 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
                 self.cardiofinish.setItem(rowPosition3, 3, item4)
                 return rowPosition3
 
-    def patientC(self, data, i):
+    def patientC(self, data, i):  # latest
         data['tid'] = threading.get_native_id()
         row_id_w_g = self.addglobaltables(data)  # global waiting
-        row_id_w_c = self.addcardiotables(data)  # cardio waiting
+        row_id_w_c = self.addcardiotables(data)  # derma waiting
         while True:
             time.sleep(0.5)
-            if self.semaC._value == 1 and i == self.dermafinished.rowCount():
+            if self.semaC._value == 1 and i == self.cardiofinish.rowCount():
                 self.semaC.acquire(self)
                 self.cardioname.setText(data['name'])
                 data['status'] = 'inprocess'
-                # show inprocess global/ cardio
-
+                # show inprocess global
                 row_id_in_g = self.addglobaltables(data)  # global inprocess
                 counter = data['estime']
                 while counter >= 0:
@@ -217,12 +212,12 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
                     counter -= 1
                 data['status'] = 'finished'
 
-                # delete from waiting global/cardio
-                self.updateglobal(row_id_w_g, row_id_in_g, data['tid'])  # global remove waiting
-                self.updatecardio()  # cardio remove waiting
-                # show in finished globa/cardio
+                # delete from waiting global/derma
+                self.updateglobal(row_id_w_g, row_id_in_g)  # global remove waiting
+                self.updatecardio()  # derma remove waiting
+                # show in finished globa/derma
                 self.addglobaltables(data)  # finished global add
-                self.addcardiotables(data)  # finished cardio add
+                self.addcardiotables(data)  # finished derma add
                 self.semaC.release()
                 break
 
@@ -245,7 +240,7 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
                     counter -= 1
                 data['status'] = 'finished'
                 # delete from waiting global/ortho
-                self.updateglobal(row_id_w_g, row_id_in_g, data['tid'])  # global remove waiting
+                self.updateglobal(row_id_w_g, row_id_in_g)  # global remove waiting
                 self.updateortho()  # ortho remove waiting
                 # show in finished globa/ortho
                 self.addglobaltables(data)  # finished global add
@@ -259,7 +254,7 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
         row_id_w_c = self.adddematables(data)  # derma waiting
         while True:
             time.sleep(0.5)
-            if self.semaD._value == 1 and i == self.dermafinished.rowCount():  # schedualing
+            if self.semaD._value == 1 and i == self.dermafinished.rowCount():
                 self.semaD.acquire(self)
                 self.dermaname.setText(data['name'])
                 data['status'] = 'inprocess'
@@ -273,7 +268,7 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
                 data['status'] = 'finished'
 
                 # delete from waiting global/derma
-                self.updateglobal(row_id_w_g, row_id_in_g, data['tid'])  # global remove waiting
+                self.updateglobal(row_id_w_g, row_id_in_g)  # global remove waiting
                 self.updatederma()  # derma remove waiting
                 # show in finished globa/derma
                 self.addglobaltables(data)  # finished global add
