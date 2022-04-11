@@ -1,6 +1,6 @@
+from threading import Semaphore
 import threading
 import time
-
 from PySide2 import QtWidgets
 from PySide2 import QtGui, QtCore as ss
 from PyQt5.QtGui import *
@@ -9,21 +9,18 @@ from dummy_data import *
 import main
 import os
 
-from threading import *
-
 
 class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
 
     def __init__(self):
         super(MyQtApp, self).__init__()
-        self.threads = []
         self.treatments = []
         self.doctor_review = {'o': [], 'c': [], 'd': []}
         self.prog_status = True
         self.setupUi(self)
-        self.semaC = Semaphore
-        self.semaD = Semaphore
-        self.semaO = Semaphore
+        self.semaC = Semaphore(1)
+        self.semaD = Semaphore(1)
+        self.semaO = Semaphore(1)
         self.showMaximized()
         self.setWindowIcon(QtGui.QIcon("images/logo.png"))
         self.pushButton.clicked.connect(self.mainprocess)
@@ -36,7 +33,7 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
                     res.append(j)
         return res
 
-    def updateglobal(self, row_id_w,row_id_in):
+    def updateglobal(self, row_id_w, row_id_in):
         try:
             self.statwaiting.removeRow(row_id_w)
             self.statinproc.removeRow(row_id_in)
@@ -200,8 +197,9 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
         row_id_w_g = self.addglobaltables(data)  # global waiting
         row_id_w_c = self.addcardiotables(data)  # cardio waiting
         while True:
+            time.sleep(0.5)
             if self.semaC._value == 1:
-                self.semaC.acquire()
+                self.semaC.acquire(self)
                 self.cardioname.setText(data['name'])
                 data['status'] = 'inprocess'
                 # show inprocess global/ cardio
@@ -213,20 +211,22 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
                     counter -= 1
                 data['status'] = 'finished'
                 self.semaC.release()
-                # delete from waiting global/cardi
-                self.updateglobal(row_id_w_g,row_id_in_g)  # global remove waiting
+                # delete from waiting global/cardio
+                self.updateglobal(row_id_w_g, row_id_in_g)  # global remove waiting
                 self.updatecardio(row_id_w_c)  # cardio remove waiting
                 # show in finished globa/cardio
-                self.addglobaltables(data) # finished global add
-                self.addcardiotables(data) # finished cardio add
+                self.addglobaltables(data)  # finished global add
+                self.addcardiotables(data)  # finished cardio add
+                return
 
     def patientO(self, data):
         data['tid'] = threading.get_native_id()
         row_id_w_g = self.addglobaltables(data)  # global waiting
         row_id_w_c = self.addorthotables(data)  # ortho waiting
         while True:
+            time.sleep(0.5)
             if self.semaO._value == 1:
-                self.semaO.acquire()
+                self.semaO.acquire(self)
                 self.orthoname.setText(data['name'])
                 data['status'] = 'inprocess'
                 # show inprocess global
@@ -239,19 +239,21 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
                 data['status'] = 'finished'
                 self.semaO.release()
                 # delete from waiting global/ortho
-                self.updateglobal(row_id_w_g,row_id_in_g)  # global remove waiting
+                self.updateglobal(row_id_w_g, row_id_in_g)  # global remove waiting
                 self.updateortho(row_id_w_c)  # ortho remove waiting
                 # show in finished globa/ortho
-                self.addglobaltables(data) # finished global add
-                self.addorthotables(data) # finished ortho add
+                self.addglobaltables(data)  # finished global add
+                self.addorthotables(data)  # finished ortho add
+                return
 
-    def patientD(self, data):
+    def patientD(self, data, i):
         data['tid'] = threading.get_native_id()
         row_id_w_g = self.addglobaltables(data)  # global waiting
         row_id_w_c = self.adddematables(data)  # derma waiting
         while True:
-            if self.semaD._value == 1:
-                self.semaD.acquire()
+            time.sleep(0.5)
+            if self.semaD._value == 1 and i == self.dermafinished.rowCount():
+                self.semaD.acquire(self)
                 self.dermaname.setText(data['name'])
                 data['status'] = 'inprocess'
                 # show inprocess global
@@ -264,11 +266,12 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
                 data['status'] = 'finished'
                 self.semaD.release()
                 # delete from waiting global/derma
-                self.updateglobal(row_id_w_g,row_id_in_g)  # global remove waiting
+                self.updateglobal(row_id_w_g, row_id_in_g)  # global remove waiting
                 self.updatederma(row_id_w_c)  # derma remove waiting
                 # show in finished globa/derma
-                self.addglobaltables(data) # finished global add
-                self.adddematables(data) # finished derma add
+                self.addglobaltables(data)  # finished global add
+                self.adddematables(data)  # finished derma add
+                return
 
     def monitoring(self):
         while self.prog_status == True or len(self.threads) > 0:
@@ -282,23 +285,20 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
     def schedualing_ortho(self):
         for per in self.doctor_review['o']:
             per['status'] = 'waiting'
-            runthrd = threading.Thread(target=self.patientD, args=(per,))
+            runthrd = threading.Thread(target=self.patientO, args=(per,))
             runthrd.start()
-            self.threads.append(runthrd)
 
     def schedualing_cardio(self):
         for per in self.doctor_review['c']:
             per['status'] = 'waiting'
             runthrd = threading.Thread(target=self.patientC, args=(per,))
             runthrd.start()
-            self.threads.append(runthrd)
 
     def schedualing_dema(self):
-        for per in self.doctor_review['d']:
+        for i, per in enumerate(self.doctor_review['d']):
             per['status'] = 'waiting'
-            runthrd = threading.Thread(target=self.patientD, args=(per,))
+            runthrd = threading.Thread(target=self.patientD, args=(per, i,))
             runthrd.start()
-            self.threads.append(runthrd)
 
     def schedualing_treatment(self):
         pass
@@ -312,39 +312,47 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
         # using fork to process parent and child processes
         e_value = os.fork()
 
-        # process each patient
-        for patient_data in e_data:
+        # check the value to know parent or child
+        # parent for doctor review proces and
+        # child for treatment process in total
+        # two process
 
-            # check the value to know parent or child
-            # parent for doctor review proces and
-            # child for treatment process in total
-            # two process
-            if e_value > 0 and patient_data['type'] == 0:
-                if patient_data['review'] == 'o':
-                    self.doctor_review['o'].append(patient_data)
-                if patient_data['review'] == 'c':
-                    self.doctor_review['c'].append(patient_data)
-                if patient_data['review'] == 'd':
-                    self.doctor_review['d'].append(patient_data)
-            elif e_value == 0 and patient_data['type'] == 1:
-                self.treatments.append(patient_data)
-            else:
-                print("Couldn't handle fork!")
+        if e_value > 0:
+            # parent process
+            print("parent")
+            for patient_data in e_data:
+                if patient_data['type'] == 0:
+                    if patient_data['review'] == 'o':
+                        self.doctor_review['o'].append(patient_data)
+                    if patient_data['review'] == 'c':
+                        self.doctor_review['c'].append(patient_data)
+                    if patient_data['review'] == 'd':
+                        self.doctor_review['d'].append(patient_data)
+            self.orthocount.setText(str(len(self.doctor_review['o'])))
+            self.doctor_review['o'] = self.preparepatients(self.doctor_review['o'])
 
-        self.orthocount.setText(str(len(self.doctor_review['o'])))
-        self.doctor_review['o'] = self.preparepatients(self.doctor_review['o'])
+            self.cardiocount.setText(str(len(self.doctor_review['c'])))
+            self.doctor_review['c'] = self.preparepatients(self.doctor_review['c'])
 
-        self.cardiocount.setText(str(len(self.doctor_review['c'])))
-        self.doctor_review['c'] = self.preparepatients(self.doctor_review['c'])
+            self.dermacount.setText(str(len(self.doctor_review['d'])))
+            self.doctor_review['d'] = self.preparepatients(self.doctor_review['d'])
 
-        self.dermacount.setText(str(len(self.doctor_review['d'])))
-        self.doctor_review['d'] = self.preparepatients(self.doctor_review['d'])
+            print(self.doctor_review['d'])
 
-        self.treatments = self.preparepatients(self.treatments)
-
-        self.schedualing_cardio()
-        self.schedualing_dema()
-        self.schedualing_ortho()
+            tr1 = threading.Thread(target=self.schedualing_cardio())
+            tr1.start()
+            tr2 = threading.Thread(target=self.schedualing_dema())
+            tr2.start()
+            tr3 = threading.Thread(target=self.schedualing_ortho())
+            tr3.start()
+        elif e_value == 0:
+            print("child")
+            for patient_data in e_data:
+                if patient_data['type'] == 1:
+                    self.treatments.append(patient_data)
+            self.treatments = self.preparepatients(self.treatments)
+        else:
+            print("Couldn't handle fork!")
 
 
 if __name__ == '__main__':
