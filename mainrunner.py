@@ -82,6 +82,9 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
                 self.statwaiting.setItem(rowPosition1, 1, item2)
                 self.statwaiting.setItem(rowPosition1, 2, item3)
                 self.statwaiting.setItem(rowPosition1, 3, item4)
+                self.statlblwaiting.setText(str(self.statwaiting.rowCount()))
+                self.statlblinproc.setText(str(self.statinproc.rowCount()))
+                self.statlblfinish.setText(str(self.statfinish.rowCount()))
                 return rowPosition1
         elif typeof == 'inprocess':
             matching_items0 = self.statinproc.findItems(str(itm['tid']), ss.Qt.MatchContains)
@@ -92,6 +95,9 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
                 self.statinproc.setItem(rowPosition2, 1, item2)
                 self.statinproc.setItem(rowPosition2, 2, item3)
                 self.statinproc.setItem(rowPosition2, 3, item4)
+                self.statlblwaiting.setText(str(self.statwaiting.rowCount()))
+                self.statlblinproc.setText(str(self.statinproc.rowCount()))
+                self.statlblfinish.setText(str(self.statfinish.rowCount()))
                 return rowPosition2
         elif typeof == 'finished':
             matching_items1 = self.statfinish.findItems(str(itm['tid']), ss.Qt.MatchContains)
@@ -102,10 +108,11 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
                 self.statfinish.setItem(rowPosition3, 1, item2)
                 self.statfinish.setItem(rowPosition3, 2, item3)
                 self.statfinish.setItem(rowPosition3, 3, item4)
+                self.statlblwaiting.setText(str(self.statwaiting.rowCount()))
+                self.statlblinproc.setText(str(self.statinproc.rowCount()))
+                self.statlblfinish.setText(str(self.statfinish.rowCount()))
                 return rowPosition3
-        self.statlblwaiting.setText(str(self.statwaiting.rowCount()))
-        self.statlblinproc.setText(str(self.statinproc.rowCount()))
-        self.statlblfinish.setText(str(self.statfinish.rowCount()))
+
 
     def addorthotables(self, itm):
         typeof = itm['status']
