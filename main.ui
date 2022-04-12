@@ -2403,9 +2403,9 @@ background-color: rgb(40, 45, 50);
         <widget class="QPushButton" name="pushButton">
          <property name="geometry">
           <rect>
-           <x>710</x>
+           <x>700</x>
            <y>40</y>
-           <width>321</width>
+           <width>171</width>
            <height>28</height>
           </rect>
          </property>
@@ -2423,6 +2423,31 @@ QPushButton:hover#pushButton
          </property>
          <property name="text">
           <string>Start</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="exitbutton">
+         <property name="geometry">
+          <rect>
+           <x>880</x>
+           <y>40</y>
+           <width>171</width>
+           <height>28</height>
+          </rect>
+         </property>
+         <property name="cursor">
+          <cursorShape>PointingHandCursor</cursorShape>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">
+QPushButton:hover#pushButton
+{
+	background-color: rgb(45, 50, 55);
+	border-color: rgb(255, 44, 121);
+}
+</string>
+         </property>
+         <property name="text">
+          <string>Exit</string>
          </property>
         </widget>
        </widget>
@@ -4658,7 +4683,8 @@ QFrame:hover
          </rect>
         </property>
         <property name="styleSheet">
-         <string notr="true">background-color: rgb(40, 45, 50);</string>
+         <string notr="true">background-color: rgb(40, 45, 50);
+color: rgb(40, 45, 50);</string>
         </property>
         <property name="orientation">
          <enum>Qt::Vertical</enum>
@@ -4674,7 +4700,8 @@ QFrame:hover
          </rect>
         </property>
         <property name="styleSheet">
-         <string notr="true">background-color: rgb(40, 45, 50);</string>
+         <string notr="true">background-color: rgb(40, 45, 50);
+color: rgb(40, 45, 50);</string>
         </property>
         <property name="orientation">
          <enum>Qt::Vertical</enum>

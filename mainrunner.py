@@ -24,6 +24,11 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
         self.showMaximized()
         self.setWindowIcon(QtGui.QIcon("images/logo.png"))
         self.pushButton.clicked.connect(self.mainprocess)
+        self.exitbutton.clicked.connect(self.exitprogram)
+
+    def exitprogram(self):
+        self.QApplication.closeAllWindows()
+        exit()
 
     def preparepatients(self, qeue):
         res = []
@@ -326,6 +331,7 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
         self.statlblfinish.setText(str(self.statfinish.rowCount()))
 
     def mainprocess(self):
+        self.pushButton.setEnabled(False)
         # monitor all threads
         # self.monitoring()
         # get dummy data for testing

@@ -2145,9 +2145,20 @@ class Ui_MainWindow(object):
         self.label_48.setAlignment(Qt.AlignCenter)
         self.pushButton = QPushButton(self.frame_14)
         self.pushButton.setObjectName(u"pushButton")
-        self.pushButton.setGeometry(QRect(710, 40, 321, 28))
+        self.pushButton.setGeometry(QRect(700, 40, 171, 28))
         self.pushButton.setCursor(QCursor(Qt.PointingHandCursor))
         self.pushButton.setStyleSheet(u"\n"
+"QPushButton:hover#pushButton\n"
+"{\n"
+"	background-color: rgb(45, 50, 55);\n"
+"	border-color: rgb(255, 44, 121);\n"
+"}\n"
+"")
+        self.exitbutton = QPushButton(self.frame_14)
+        self.exitbutton.setObjectName(u"exitbutton")
+        self.exitbutton.setGeometry(QRect(880, 40, 171, 28))
+        self.exitbutton.setCursor(QCursor(Qt.PointingHandCursor))
+        self.exitbutton.setStyleSheet(u"\n"
 "QPushButton:hover#pushButton\n"
 "{\n"
 "	background-color: rgb(45, 50, 55);\n"
@@ -2842,13 +2853,15 @@ class Ui_MainWindow(object):
         self.line = QFrame(self.tab)
         self.line.setObjectName(u"line")
         self.line.setGeometry(QRect(580, 410, 16, 311))
-        self.line.setStyleSheet(u"background-color: rgb(40, 45, 50);")
+        self.line.setStyleSheet(u"background-color: rgb(40, 45, 50);\n"
+"color: rgb(40, 45, 50);")
         self.line.setFrameShape(QFrame.VLine)
         self.line.setFrameShadow(QFrame.Sunken)
         self.line_2 = QFrame(self.tab)
         self.line_2.setObjectName(u"line_2")
         self.line_2.setGeometry(QRect(1180, 410, 16, 311))
-        self.line_2.setStyleSheet(u"background-color: rgb(40, 45, 50);")
+        self.line_2.setStyleSheet(u"background-color: rgb(40, 45, 50);\n"
+"color: rgb(40, 45, 50);")
         self.line_2.setFrameShape(QFrame.VLine)
         self.line_2.setFrameShadow(QFrame.Sunken)
         self.tabWidget.addTab(self.tab, "")
@@ -2902,6 +2915,7 @@ class Ui_MainWindow(object):
         self.label_42.setText(QCoreApplication.translate("MainWindow", u"Finished", None))
         self.label_48.setText(QCoreApplication.translate("MainWindow", u"Treatment Dashbord", None))
         self.pushButton.setText(QCoreApplication.translate("MainWindow", u"Start", None))
+        self.exitbutton.setText(QCoreApplication.translate("MainWindow", u"Exit", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.HOMETAP), QCoreApplication.translate("MainWindow", u"Home", None))
         self.label_13.setText(QCoreApplication.translate("MainWindow", u"Cardiology", None))
         self.label_14.setText(QCoreApplication.translate("MainWindow", u"Number of patients : ", None))
