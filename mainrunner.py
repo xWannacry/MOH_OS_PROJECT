@@ -27,7 +27,7 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
         self.exitbutton.clicked.connect(self.exitprogram)
 
     def exitprogram(self):
-        self.QApplication.closeAllWindows()
+        self.close()
         exit()
 
     def preparepatients(self, qeue):
