@@ -211,7 +211,6 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
                     self.cardiotime.setText(str(counter))
                     counter -= 1
                 data['status'] = 'finished'
-
                 # delete from waiting global/derma
                 self.updateglobal(row_id_w_g, row_id_in_g)  # global remove waiting
                 self.updatecardio()  # derma remove waiting
