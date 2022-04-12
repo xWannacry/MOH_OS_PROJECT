@@ -98,6 +98,9 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
                 self.statfinish.setItem(rowPosition3, 2, item3)
                 self.statfinish.setItem(rowPosition3, 3, item4)
                 return rowPosition3
+        self.statlblwaiting.setText(str(self.statwaiting.rowCount()))
+        self.statlblinproc.setText(str(self.statinproc.rowCount()))
+        self.statlblfinish.setText(str(self.statfinish.rowCount()))
 
     def addorthotables(self, itm):
         typeof = itm['status']
@@ -196,7 +199,7 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
     def patientC(self, data, i):  # latest
         data['tid'] = threading.get_native_id()
         row_id_w_g = self.addglobaltables(data)  # global waiting
-        row_id_w_c = self.addcardiotables(data)  # derma waiting
+        row_id_w_c = self.addcardiotables(data)  # cardio waiting
         while True:
             time.sleep(0.5)
             if self.semaC._value == 1 and i == self.cardiofinish.rowCount():
@@ -211,8 +214,9 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
                     self.cardiotime.setText(str(counter))
                     counter -= 1
                 data['status'] = 'finished'
-                # delete from waiting global/derma
-                self.updateglobal(row_id_w_g, row_id_in_g)  # global remove waiting
+                # delete from waiting global/cardio
+                self.updatestat(data)
+                # self.updateglobal(row_id_w_g, row_id_in_g)  # global remove waiting
                 self.updatecardio()  # derma remove waiting
                 # show in finished globa/derma
                 self.addglobaltables(data)  # finished global add
@@ -304,6 +308,22 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
 
     def schedualing_treatment(self):
         pass
+
+    def updatestat(self, itm):
+        try:
+            matching_items3 = self.statwaiting.findItems(str(itm['tid']), ss.Qt.MatchContains)
+            if matching_items3:
+                rmv = matching_items3[0].row()
+                self.statwaiting.removeRow(rmv)
+            matching_items4 = self.statinproc.findItems(str(itm['tid']), ss.Qt.MatchContains)
+            if matching_items4:
+                rmv1 = matching_items4[0].row()
+                self.statinproc.removeRow(rmv1)
+        except:
+            pass
+        self.statlblwaiting.setText(str(self.statwaiting.rowCount()))
+        self.statlblinproc.setText(str(self.statinproc.rowCount()))
+        self.statlblfinish.setText(str(self.statfinish.rowCount()))
 
     def mainprocess(self):
         # monitor all threads
