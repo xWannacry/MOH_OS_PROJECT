@@ -76,42 +76,34 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
         if typeof == 'waiting':
             matching_items3 = self.statwaiting.findItems(str(itm['tid']), ss.Qt.MatchContains)
             if not matching_items3:
-                rowPosition1 = self.statwaiting.rowCount()
-                self.statwaiting.setRowCount(rowPosition1 + 1)
-                self.statwaiting.setItem(rowPosition1, 0, item1)
-                self.statwaiting.setItem(rowPosition1, 1, item2)
-                self.statwaiting.setItem(rowPosition1, 2, item3)
-                self.statwaiting.setItem(rowPosition1, 3, item4)
-                self.statlblwaiting.setText(str(self.statwaiting.rowCount()))
-                self.statlblinproc.setText(str(self.statinproc.rowCount()))
-                self.statlblfinish.setText(str(self.statfinish.rowCount()))
-                return rowPosition1
+                row = self.statwaiting.rowCount()
+                self.statwaiting.setRowCount(row + 1)
+                self.statwaiting.setItem(row, 0, item1)
+                self.statwaiting.setItem(row, 1, item2)
+                self.statwaiting.setItem(row, 2, item3)
+                self.statwaiting.setItem(row, 3, item4)
         elif typeof == 'inprocess':
             matching_items0 = self.statinproc.findItems(str(itm['tid']), ss.Qt.MatchContains)
             if not matching_items0:
-                rowPosition2 = self.statinproc.rowCount()
-                self.statinproc.setRowCount(rowPosition2 + 1)
-                self.statinproc.setItem(rowPosition2, 0, item1)
-                self.statinproc.setItem(rowPosition2, 1, item2)
-                self.statinproc.setItem(rowPosition2, 2, item3)
-                self.statinproc.setItem(rowPosition2, 3, item4)
-                self.statlblwaiting.setText(str(self.statwaiting.rowCount()))
-                self.statlblinproc.setText(str(self.statinproc.rowCount()))
-                self.statlblfinish.setText(str(self.statfinish.rowCount()))
-                return rowPosition2
+                row = self.statinproc.rowCount()
+                self.statinproc.setRowCount(row + 1)
+                self.statinproc.setItem(row, 0, item1)
+                self.statinproc.setItem(row, 1, item2)
+                self.statinproc.setItem(row, 2, item3)
+                self.statinproc.setItem(row, 3, item4)
         elif typeof == 'finished':
             matching_items1 = self.statfinish.findItems(str(itm['tid']), ss.Qt.MatchContains)
             if not matching_items1:
-                rowPosition3 = self.statfinish.rowCount()
-                self.statfinish.setRowCount(rowPosition3 + 1)
-                self.statfinish.setItem(rowPosition3, 0, item1)
-                self.statfinish.setItem(rowPosition3, 1, item2)
-                self.statfinish.setItem(rowPosition3, 2, item3)
-                self.statfinish.setItem(rowPosition3, 3, item4)
-                self.statlblwaiting.setText(str(self.statwaiting.rowCount()))
-                self.statlblinproc.setText(str(self.statinproc.rowCount()))
-                self.statlblfinish.setText(str(self.statfinish.rowCount()))
-                return rowPosition3
+                row = self.statfinish.rowCount()
+                self.statfinish.setRowCount(row + 1)
+                self.statfinish.setItem(row, 0, item1)
+                self.statfinish.setItem(row, 1, item2)
+                self.statfinish.setItem(row, 2, item3)
+                self.statfinish.setItem(row, 3, item4)
+        # update home counters
+        self.statlblwaiting.setText(str(self.statwaiting.rowCount()))
+        self.statlblinproc.setText(str(self.statinproc.rowCount()))
+        self.statlblfinish.setText(str(self.statfinish.rowCount()))
 
     def addorthotables(self, itm):
         typeof = itm['status']
@@ -126,24 +118,23 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
         if typeof == 'waiting':
             matching_items3 = self.orthowaiting.findItems(str(itm['tid']), ss.Qt.MatchContains)
             if not matching_items3:
-                rowPosition1 = self.orthowaiting.rowCount()
-                self.orthowaiting.setRowCount(rowPosition1 + 1)
-                self.orthowaiting.setItem(rowPosition1, 0, item1)
-                self.orthowaiting.setItem(rowPosition1, 1, item2)
-                self.orthowaiting.setItem(rowPosition1, 2, item3)
-                self.orthowaiting.setItem(rowPosition1, 3, item4)
-                print(rowPosition1)
-                return rowPosition1
+                row = self.orthowaiting.rowCount()
+                self.orthowaiting.setRowCount(row + 1)
+                self.orthowaiting.setItem(row, 0, item1)
+                self.orthowaiting.setItem(row, 1, item2)
+                self.orthowaiting.setItem(row, 2, item3)
+                self.orthowaiting.setItem(row, 3, item4)
+                return row
         elif typeof == 'finished':
             matching_items1 = self.orthofinish.findItems(str(itm['tid']), ss.Qt.MatchContains)
             if not matching_items1:
-                rowPosition3 = self.orthofinish.rowCount()
-                self.orthofinish.setRowCount(rowPosition3 + 1)
-                self.orthofinish.setItem(rowPosition3, 0, item1)
-                self.orthofinish.setItem(rowPosition3, 1, item2)
-                self.orthofinish.setItem(rowPosition3, 2, item3)
-                self.orthofinish.setItem(rowPosition3, 3, item4)
-                return rowPosition3
+                row = self.orthofinish.rowCount()
+                self.orthofinish.setRowCount(row + 1)
+                self.orthofinish.setItem(row, 0, item1)
+                self.orthofinish.setItem(row, 1, item2)
+                self.orthofinish.setItem(row, 2, item3)
+                self.orthofinish.setItem(row, 3, item4)
+                return row
 
     def adddematables(self, itm):
         typeof = itm['status']
@@ -158,23 +149,23 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
         if typeof == 'waiting':
             matching_items3 = self.dermawaiting.findItems(str(itm['tid']), ss.Qt.MatchContains)
             if not matching_items3:
-                rowPosition1 = self.dermawaiting.rowCount()
-                self.dermawaiting.setRowCount(rowPosition1 + 1)
-                self.dermawaiting.setItem(rowPosition1, 0, item1)
-                self.dermawaiting.setItem(rowPosition1, 1, item2)
-                self.dermawaiting.setItem(rowPosition1, 2, item3)
-                self.dermawaiting.setItem(rowPosition1, 3, item4)
-                return rowPosition1
+                row = self.dermawaiting.rowCount()
+                self.dermawaiting.setRowCount(row + 1)
+                self.dermawaiting.setItem(row, 0, item1)
+                self.dermawaiting.setItem(row, 1, item2)
+                self.dermawaiting.setItem(row, 2, item3)
+                self.dermawaiting.setItem(row, 3, item4)
+                return row
         elif typeof == 'finished':
             matching_items1 = self.dermafinished.findItems(str(itm['tid']), ss.Qt.MatchContains)
             if not matching_items1:
-                rowPosition3 = self.dermafinished.rowCount()
-                self.dermafinished.setRowCount(rowPosition3 + 1)
-                self.dermafinished.setItem(rowPosition3, 0, item1)
-                self.dermafinished.setItem(rowPosition3, 1, item2)
-                self.dermafinished.setItem(rowPosition3, 2, item3)
-                self.dermafinished.setItem(rowPosition3, 3, item4)
-                return rowPosition3
+                row = self.dermafinished.rowCount()
+                self.dermafinished.setRowCount(row + 1)
+                self.dermafinished.setItem(row, 0, item1)
+                self.dermafinished.setItem(row, 1, item2)
+                self.dermafinished.setItem(row, 2, item3)
+                self.dermafinished.setItem(row, 3, item4)
+                return row
 
     def addcardiotables(self, itm):
         typeof = itm['status']
@@ -189,28 +180,28 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
         if typeof == 'waiting':
             matching_items3 = self.cardiowaiting.findItems(str(itm['tid']), ss.Qt.MatchContains)
             if not matching_items3:
-                rowPosition1 = self.cardiowaiting.rowCount()
-                self.cardiowaiting.setRowCount(rowPosition1 + 1)
-                self.cardiowaiting.setItem(rowPosition1, 0, item1)
-                self.cardiowaiting.setItem(rowPosition1, 1, item2)
-                self.cardiowaiting.setItem(rowPosition1, 2, item3)
-                self.cardiowaiting.setItem(rowPosition1, 3, item4)
-                return rowPosition1
+                row = self.cardiowaiting.rowCount()
+                self.cardiowaiting.setRowCount(row + 1)
+                self.cardiowaiting.setItem(row, 0, item1)
+                self.cardiowaiting.setItem(row, 1, item2)
+                self.cardiowaiting.setItem(row, 2, item3)
+                self.cardiowaiting.setItem(row, 3, item4)
+                return row
         elif typeof == 'finished':
             matching_items1 = self.cardiofinish.findItems(str(itm['tid']), ss.Qt.MatchContains)
             if not matching_items1:
-                rowPosition3 = self.cardiofinish.rowCount()
-                self.cardiofinish.setRowCount(rowPosition3 + 1)
-                self.cardiofinish.setItem(rowPosition3, 0, item1)
-                self.cardiofinish.setItem(rowPosition3, 1, item2)
-                self.cardiofinish.setItem(rowPosition3, 2, item3)
-                self.cardiofinish.setItem(rowPosition3, 3, item4)
-                return rowPosition3
+                row = self.cardiofinish.rowCount()
+                self.cardiofinish.setRowCount(row + 1)
+                self.cardiofinish.setItem(row, 0, item1)
+                self.cardiofinish.setItem(row, 1, item2)
+                self.cardiofinish.setItem(row, 2, item3)
+                self.cardiofinish.setItem(row, 3, item4)
+                return row
 
     def patientC(self, data, i):  # latest
         data['tid'] = threading.get_native_id()
-        row_id_w_g = self.addglobaltables(data)  # global waiting
-        row_id_w_c = self.addcardiotables(data)  # cardio waiting
+        self.addglobaltables(data)  # global waiting
+        self.addcardiotables(data)  # cardio waiting
         while True:
             time.sleep(0.5)
             if self.semaC._value == 1 and i == self.cardiofinish.rowCount():
@@ -218,7 +209,7 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
                 self.cardioname.setText(data['name'])
                 data['status'] = 'inprocess'
                 # show inprocess global
-                row_id_in_g = self.addglobaltables(data)  # global inprocess
+                self.addglobaltables(data)  # global inprocess
                 counter = data['estime']
                 while counter >= 0:
                     time.sleep(1)
@@ -237,8 +228,8 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
 
     def patientO(self, data, i):
         data['tid'] = threading.get_native_id()
-        row_id_w_g = self.addglobaltables(data)  # global waiting
-        row_id_w_c = self.addorthotables(data)  # ortho waiting
+        self.addglobaltables(data)  # global waiting
+        self.addorthotables(data)  # ortho waiting
         while True:
             time.sleep(0.5)
             if self.semaO._value == 1 and i == self.orthofinish.rowCount():
@@ -246,15 +237,15 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
                 self.orthoname.setText(data['name'])
                 data['status'] = 'inprocess'
                 # show inprocess global
-                row_id_in_g = self.addglobaltables(data)  # global inprocess
+                self.addglobaltables(data)  # global inprocess
                 counter = data['estime']
                 while counter >= 0:
                     time.sleep(1)
                     self.orthotime.setText(str(counter))
                     counter -= 1
                 data['status'] = 'finished'
-                # delete from waiting global/ortho
-                self.updateglobal(row_id_w_g, row_id_in_g)  # global remove waiting
+                # delete from waiting global/cardio
+                self.updatestat(data)
                 self.updateortho()  # ortho remove waiting
                 # show in finished globa/ortho
                 self.addglobaltables(data)  # finished global add
@@ -264,8 +255,8 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
 
     def patientD(self, data, i):
         data['tid'] = threading.get_native_id()
-        row_id_w_g = self.addglobaltables(data)  # global waiting
-        row_id_w_c = self.adddematables(data)  # derma waiting
+        self.addglobaltables(data)  # global waiting
+        self.adddematables(data)  # derma waiting
         while True:
             time.sleep(0.5)
             if self.semaD._value == 1 and i == self.dermafinished.rowCount():
@@ -273,16 +264,15 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
                 self.dermaname.setText(data['name'])
                 data['status'] = 'inprocess'
                 # show inprocess global
-                row_id_in_g = self.addglobaltables(data)  # global inprocess
+                self.addglobaltables(data)  # global inprocess
                 counter = data['estime']
                 while counter >= 0:
                     time.sleep(1)
                     self.dermatime.setText(str(counter))
                     counter -= 1
                 data['status'] = 'finished'
-
                 # delete from waiting global/derma
-                self.updateglobal(row_id_w_g, row_id_in_g)  # global remove waiting
+                self.updatestat(data)
                 self.updatederma()  # derma remove waiting
                 # show in finished globa/derma
                 self.addglobaltables(data)  # finished global add
@@ -371,7 +361,7 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
             self.dermacount.setText(str(len(self.doctor_review['d'])))
             self.doctor_review['d'] = self.preparepatients(self.doctor_review['d'])
 
-            alldrp = len(self.doctor_review['o'])+len(self.doctor_review['c'])+len(self.doctor_review['d'])
+            alldrp = len(self.doctor_review['o']) + len(self.doctor_review['c']) + len(self.doctor_review['d'])
             self.drpc.setText(str(alldrp))
 
             tr1 = threading.Thread(target=self.schedualing_cardio())
