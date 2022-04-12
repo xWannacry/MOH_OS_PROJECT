@@ -2159,12 +2159,30 @@ class Ui_MainWindow(object):
         self.exitbutton.setGeometry(QRect(880, 40, 171, 28))
         self.exitbutton.setCursor(QCursor(Qt.PointingHandCursor))
         self.exitbutton.setStyleSheet(u"\n"
-"QPushButton:hover#pushButton\n"
+"QPushButton:hover#exitbutton\n"
 "{\n"
 "	background-color: rgb(45, 50, 55);\n"
 "	border-color: rgb(255, 44, 121);\n"
 "}\n"
 "")
+        self.drpc = QLabel(self.frame_14)
+        self.drpc.setObjectName(u"drpc")
+        self.drpc.setGeometry(QRect(230, 30, 171, 16))
+        self.drpc.setFont(font1)
+        self.drpc.setStyleSheet(u"color: rgb(255, 140, 0);")
+        self.label_3 = QLabel(self.frame_14)
+        self.label_3.setObjectName(u"label_3")
+        self.label_3.setGeometry(QRect(20, 30, 191, 16))
+        self.label_3.setFont(font1)
+        self.tmpc = QLabel(self.frame_14)
+        self.tmpc.setObjectName(u"tmpc")
+        self.tmpc.setGeometry(QRect(230, 50, 171, 16))
+        self.tmpc.setFont(font1)
+        self.tmpc.setStyleSheet(u"color: rgb(255, 140, 0);")
+        self.label_4 = QLabel(self.frame_14)
+        self.label_4.setObjectName(u"label_4")
+        self.label_4.setGeometry(QRect(20, 50, 191, 16))
+        self.label_4.setFont(font1)
         self.tabWidget.addTab(self.HOMETAP, "")
         self.tab_2 = QWidget()
         self.tab_2.setObjectName(u"tab_2")
@@ -2916,6 +2934,10 @@ class Ui_MainWindow(object):
         self.label_48.setText(QCoreApplication.translate("MainWindow", u"Treatment Dashbord", None))
         self.pushButton.setText(QCoreApplication.translate("MainWindow", u"Start", None))
         self.exitbutton.setText(QCoreApplication.translate("MainWindow", u"Exit", None))
+        self.drpc.setText(QCoreApplication.translate("MainWindow", u"0", None))
+        self.label_3.setText(QCoreApplication.translate("MainWindow", u"Doctor review patients :", None))
+        self.tmpc.setText(QCoreApplication.translate("MainWindow", u"0", None))
+        self.label_4.setText(QCoreApplication.translate("MainWindow", u"Treatment patients :", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.HOMETAP), QCoreApplication.translate("MainWindow", u"Home", None))
         self.label_13.setText(QCoreApplication.translate("MainWindow", u"Cardiology", None))
         self.label_14.setText(QCoreApplication.translate("MainWindow", u"Number of patients : ", None))

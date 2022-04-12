@@ -113,7 +113,6 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
                 self.statlblfinish.setText(str(self.statfinish.rowCount()))
                 return rowPosition3
 
-
     def addorthotables(self, itm):
         typeof = itm['status']
         item1 = QtWidgets.QTableWidgetItem(str(itm['tid']))
@@ -372,7 +371,8 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
             self.dermacount.setText(str(len(self.doctor_review['d'])))
             self.doctor_review['d'] = self.preparepatients(self.doctor_review['d'])
 
-            print(self.doctor_review['d'])
+            alldrp = len(self.doctor_review['o'])+len(self.doctor_review['c'])+len(self.doctor_review['d'])
+            self.drpc.setText(str(alldrp))
 
             tr1 = threading.Thread(target=self.schedualing_cardio())
             tr1.start()
@@ -386,6 +386,7 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
                 if patient_data['type'] == 1:
                     self.treatments.append(patient_data)
             self.treatments = self.preparepatients(self.treatments)
+            self.tmpc.setText(str(len(self.treatments)))
         else:
             print("Couldn't handle fork!")
 
