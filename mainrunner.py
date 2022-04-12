@@ -75,7 +75,7 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
         item4.setTextAlignment(Qt.AlignCenter)
         type_str = ''
         if int(itm['type']) == 0:
-            match itm['type']:
+            match itm['review']:
                 case 'o':
                     type_str = 'Orthopedics'
                 case 'c':
