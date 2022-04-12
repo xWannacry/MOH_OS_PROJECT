@@ -353,6 +353,7 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
 
     def mainprocess(self):
         self.pushButton.setEnabled(False)
+        self.pushButton.setText('Started !')
         # monitor all threads
         # self.monitoring()
         # get dummy data for testing
