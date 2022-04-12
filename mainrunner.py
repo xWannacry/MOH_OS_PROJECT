@@ -225,6 +225,9 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
                 self.addcardiotables(data)  # finished derma add
                 self.semaC.release()
                 break
+        if self.cardiowaiting.rowCount() == 0:
+            self.cardioname.setText('Finished!')
+            self.cardiotime.setText('0')
 
     def patientO(self, data, i):
         data['tid'] = threading.get_native_id()
@@ -252,6 +255,9 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
                 self.addorthotables(data)  # finished ortho add
                 self.semaO.release()
                 break
+        if self.orthowaiting.rowCount() == 0:
+            self.orthoname.setText('Finished!')
+            self.orthotime.setText('0')
 
     def patientD(self, data, i):
         data['tid'] = threading.get_native_id()
@@ -279,6 +285,9 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
                 self.adddematables(data)  # finished derma add
                 self.semaD.release()
                 break
+        if self.dermawaiting.rowCount() == 0:
+            self.dermaname.setText('Finished!')
+            self.dermatime.setText('0')
 
     def monitoring(self):
         while self.prog_status == True or len(self.threads) > 0:
