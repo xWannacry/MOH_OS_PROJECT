@@ -73,6 +73,19 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
         item3.setTextAlignment(Qt.AlignCenter)
         item4 = QtWidgets.QTableWidgetItem(str(itm['status']))
         item4.setTextAlignment(Qt.AlignCenter)
+        type_str = ''
+        if int(itm['type']) == 0:
+            match itm['type']:
+                case 'o':
+                    type_str = 'Orthopedics'
+                case 'c':
+                    type_str = 'Cardiology'
+                case 'd':
+                    type_str = 'Dermatology'
+        elif int(itm['type']) == 1:
+            type_str = 'Treatment'
+        item5 = QtWidgets.QTableWidgetItem(type_str)
+        item5.setTextAlignment(Qt.AlignCenter)
         if typeof == 'waiting':
             matching_items3 = self.statwaiting.findItems(str(itm['tid']), ss.Qt.MatchContains)
             if not matching_items3:
@@ -82,6 +95,7 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
                 self.statwaiting.setItem(row, 1, item2)
                 self.statwaiting.setItem(row, 2, item3)
                 self.statwaiting.setItem(row, 3, item4)
+                self.statwaiting.setItem(row, 4, item5)
         elif typeof == 'inprocess':
             matching_items0 = self.statinproc.findItems(str(itm['tid']), ss.Qt.MatchContains)
             if not matching_items0:
@@ -91,6 +105,7 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
                 self.statinproc.setItem(row, 1, item2)
                 self.statinproc.setItem(row, 2, item3)
                 self.statinproc.setItem(row, 3, item4)
+                self.statinproc.setItem(row, 4, item5)
         elif typeof == 'finished':
             matching_items1 = self.statfinish.findItems(str(itm['tid']), ss.Qt.MatchContains)
             if not matching_items1:
@@ -100,6 +115,7 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
                 self.statfinish.setItem(row, 1, item2)
                 self.statfinish.setItem(row, 2, item3)
                 self.statfinish.setItem(row, 3, item4)
+                self.statfinish.setItem(row, 4, item5)
         # update home counters
         self.statlblwaiting.setText(str(self.statwaiting.rowCount()))
         self.statlblinproc.setText(str(self.statinproc.rowCount()))

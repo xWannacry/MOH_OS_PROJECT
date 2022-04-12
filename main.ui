@@ -2017,6 +2017,11 @@ background-color: rgb(40, 45, 50);
            <string>STATUS</string>
           </property>
          </column>
+         <column>
+          <property name="text">
+           <string>TYPE</string>
+          </property>
+         </column>
         </widget>
         <widget class="QLabel" name="label_2">
          <property name="geometry">
@@ -2152,6 +2157,11 @@ background-color: rgb(40, 45, 50);
            <string>STATUS</string>
           </property>
          </column>
+         <column>
+          <property name="text">
+           <string>TYPE</string>
+          </property>
+         </column>
         </widget>
         <widget class="QLabel" name="label_5">
          <property name="geometry">
@@ -2285,6 +2295,11 @@ background-color: rgb(40, 45, 50);
          <column>
           <property name="text">
            <string>STATUS</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>TYPE</string>
           </property>
          </column>
         </widget>
