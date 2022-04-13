@@ -32,7 +32,6 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
         self.pushButton.clicked.connect(self.mainprocess)
         self.exitbutton.clicked.connect(self.exitprogram)
 
-
     def exitprogram(self):
         self.terminate = True
         time.sleep(1)
@@ -66,6 +65,25 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
             self.orthowaiting.removeRow(0)
         except:
             pass
+
+    def updatestat(self, itm):
+        try:
+            matching_items3 = self.statwaiting.findItems(str(itm['tid']), ss.Qt.MatchContains)
+            if matching_items3:
+                rmv = matching_items3[0].row()
+                self.statwaiting.removeRow(rmv)
+            matching_items4 = self.statinproc.findItems(str(itm['tid']), ss.Qt.MatchContains)
+            if matching_items4:
+                rmv1 = matching_items4[0].row()
+                self.statinproc.removeRow(rmv1)
+        except:
+            pass
+        self.statlblwaiting.setText(str(self.statwaiting.rowCount()))
+        self.statlblinproc.setText(str(self.statinproc.rowCount()))
+        self.statlblfinish.setText(str(self.statfinish.rowCount()))
+
+    def updateavailable(self):
+        pass
 
     def addglobaltables(self, itm):
         typeof = itm['status']
@@ -355,7 +373,6 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
             self.dermaname.setText('Finished!')
             self.dermatime.setText('0')
 
-
     def schedualing_ortho(self):
         for i, per in enumerate(self.doctor_review['o']):
             per['status'] = 'waiting'
@@ -381,26 +398,10 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
         # waiting for shared data to be available
         while self.shared_qeue.empty():
             continue
+
         self.treatments = self.shared_qeue.get()
         self.tmpc.setText(str(len(self.treatments)))
 
-
-
-    def updatestat(self, itm):
-        try:
-            matching_items3 = self.statwaiting.findItems(str(itm['tid']), ss.Qt.MatchContains)
-            if matching_items3:
-                rmv = matching_items3[0].row()
-                self.statwaiting.removeRow(rmv)
-            matching_items4 = self.statinproc.findItems(str(itm['tid']), ss.Qt.MatchContains)
-            if matching_items4:
-                rmv1 = matching_items4[0].row()
-                self.statinproc.removeRow(rmv1)
-        except:
-            pass
-        self.statlblwaiting.setText(str(self.statwaiting.rowCount()))
-        self.statlblinproc.setText(str(self.statinproc.rowCount()))
-        self.statlblfinish.setText(str(self.statfinish.rowCount()))
 
     def mainprocess(self):
         self.pushButton.setEnabled(False)
