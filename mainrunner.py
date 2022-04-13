@@ -1,4 +1,4 @@
-import random
+import multiprocessing
 from threading import Semaphore
 import threading
 import time
@@ -15,9 +15,11 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
 
     def __init__(self):
         super(MyQtApp, self).__init__()
+        self.shared_qeue = multiprocessing.Queue()
         self.terminate = False
         self.threads = []
         self.treatments = []
+        # data[0] is patients | data[1] is resources integers | data[2] is available resources
         self.e_data = getData()
         self.doctor_review = {'o': [], 'c': [], 'd': []}
         self.prog_status = True
@@ -29,6 +31,7 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
         self.setWindowIcon(QtGui.QIcon("images/logo.png"))
         self.pushButton.clicked.connect(self.mainprocess)
         self.exitbutton.clicked.connect(self.exitprogram)
+
 
     def exitprogram(self):
         self.terminate = True
@@ -45,13 +48,6 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
                 if j['doi'] == i:
                     res.append(j)
         return res
-
-    def updateglobal(self, row_id_w, row_id_in):
-        try:
-            self.statwaiting.removeRow(row_id_w)
-            self.statinproc.removeRow(row_id_in)
-        except:
-            pass
 
     def updatecardio(self):
         try:
@@ -325,6 +321,41 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
             self.dermaname.setText('Finished!')
             self.dermatime.setText('0')
 
+    def patientT(self, data, i):
+        data['tid'] = threading.get_native_id()
+        self.addglobaltables(data)  # global waiting
+        self.adddematables(data)  # derma waiting
+        while True:
+            if self.terminate:
+                break
+            time.sleep(0.5)
+            if self.semaD._value == 1 and i == self.dermafinished.rowCount():
+                self.semaD.acquire(self)
+                self.dermaname.setText(data['name'])
+                data['status'] = 'inprocess'
+                # show inprocess global
+                self.addglobaltables(data)  # global inprocess
+                counter = data['estime']
+                while counter >= 0:
+                    if self.terminate:
+                        break
+                    time.sleep(1)
+                    self.dermatime.setText(str(counter))
+                    counter -= 1
+                data['status'] = 'finished'
+                # delete from waiting global/derma
+                self.updatestat(data)
+                self.updatederma()  # derma remove waiting
+                # show in finished globa/derma
+                self.addglobaltables(data)  # finished global add
+                self.adddematables(data)  # finished derma add
+                self.semaD.release()
+                break
+        if self.dermawaiting.rowCount() == 0:
+            self.dermaname.setText('Finished!')
+            self.dermatime.setText('0')
+
+
     def schedualing_ortho(self):
         for i, per in enumerate(self.doctor_review['o']):
             per['status'] = 'waiting'
@@ -347,7 +378,13 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
             self.threads.append(runthrd)
 
     def schedualing_treatment(self):
-        pass
+        # waiting for shared data to be available
+        while self.shared_qeue.empty():
+            continue
+        self.treatments = self.shared_qeue.get()
+        self.tmpc.setText(str(len(self.treatments)))
+
+
 
     def updatestat(self, itm):
         try:
@@ -369,16 +406,15 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
         self.pushButton.setEnabled(False)
         self.pushButton.setText('Started !')
         # using fork to process parent and child processes
-
         e_value = os.fork()
+
         # check the value to know parent or child
         # parent for doctor review proces and
         # child for treatment process in totals
         # two process
         if e_value > 0:
             # parent process
-            print("parent")
-            for patient_data in self.e_data:
+            for patient_data in self.e_data[0]:
                 if patient_data['type'] == 0:
                     if patient_data['review'] == 'o':
                         self.doctor_review['o'].append(patient_data)
@@ -404,14 +440,14 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
             tr2.start()
             tr3 = threading.Thread(target=self.schedualing_ortho())
             tr3.start()
+            tr4 = threading.Thread(target=self.schedualing_treatment())
+            tr4.start()
         elif e_value == 0:
-            print("child")
-            for patient_data in self.e_data:
+            for patient_data in self.e_data[0]:
                 if patient_data['type'] == 1:
                     self.treatments.append(patient_data)
             self.treatments = self.preparepatients(self.treatments)
-            alltmpc = str(len(self.treatments))
-            self.tmpc.setText(alltmpc)
+            self.shared_qeue.put(self.treatments)
         else:
             print("Couldn't handle fork!")
 
