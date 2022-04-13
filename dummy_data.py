@@ -23,13 +23,10 @@ def getData():
             li = ["o", "c", "d"]
             tt = li[randint(0, 2)]
             ap["review"] = tt
-
         else:
-
             meNU = randint(0, 10)
             stD = randint(0, 7)
             inj = randint(0, 11)
             ap["resources"] = [meNU, stD, inj]
-
         data.append(ap)
     return data

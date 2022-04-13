@@ -1,4 +1,4 @@
-import sys
+import random
 from threading import Semaphore
 import threading
 import time
@@ -369,10 +369,11 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
         self.pushButton.setEnabled(False)
         self.pushButton.setText('Started !')
         # using fork to process parent and child processes
+
         e_value = os.fork()
         # check the value to know parent or child
         # parent for doctor review proces and
-        # child for treatment process in total
+        # child for treatment process in totals
         # two process
         if e_value > 0:
             # parent process
@@ -404,14 +405,12 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
             tr3 = threading.Thread(target=self.schedualing_ortho())
             tr3.start()
         elif e_value == 0:
-            self.tmpc.clear()
             print("child")
             for patient_data in self.e_data:
                 if patient_data['type'] == 1:
                     self.treatments.append(patient_data)
             self.treatments = self.preparepatients(self.treatments)
             alltmpc = str(len(self.treatments))
-            print(alltmpc)
             self.tmpc.setText(alltmpc)
         else:
             print("Couldn't handle fork!")
