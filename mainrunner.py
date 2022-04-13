@@ -1,3 +1,4 @@
+import sys
 from threading import Semaphore
 import threading
 import time
@@ -14,7 +15,10 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
 
     def __init__(self):
         super(MyQtApp, self).__init__()
+        self.terminate = False
+        self.threads = []
         self.treatments = []
+        self.e_data = getData()
         self.doctor_review = {'o': [], 'c': [], 'd': []}
         self.prog_status = True
         self.setupUi(self)
@@ -27,11 +31,12 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
         self.exitbutton.clicked.connect(self.exitprogram)
 
     def exitprogram(self):
+        self.terminate = True
+        time.sleep(1)
         self.semaD.release()
         self.semaO.release()
         self.semaC.release()
         self.close()
-        exit()
 
     def preparepatients(self, qeue):
         res = []
@@ -222,6 +227,8 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
         self.addglobaltables(data)  # global waiting
         self.addcardiotables(data)  # cardio waiting
         while True:
+            if self.terminate:
+                break
             time.sleep(0.5)
             if self.semaC._value == 1 and i == self.cardiofinish.rowCount():
                 self.semaC.acquire(self)
@@ -231,6 +238,8 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
                 self.addglobaltables(data)  # global inprocess
                 counter = data['estime']
                 while counter >= 0:
+                    if self.terminate:
+                        break
                     time.sleep(1)
                     self.cardiotime.setText(str(counter))
                     counter -= 1
@@ -253,6 +262,8 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
         self.addglobaltables(data)  # global waiting
         self.addorthotables(data)  # ortho waiting
         while True:
+            if self.terminate:
+                break
             time.sleep(0.5)
             if self.semaO._value == 1 and i == self.orthofinish.rowCount():
                 self.semaO.acquire(self)
@@ -262,6 +273,8 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
                 self.addglobaltables(data)  # global inprocess
                 counter = data['estime']
                 while counter >= 0:
+                    if self.terminate:
+                        break
                     time.sleep(1)
                     self.orthotime.setText(str(counter))
                     counter -= 1
@@ -283,6 +296,8 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
         self.addglobaltables(data)  # global waiting
         self.adddematables(data)  # derma waiting
         while True:
+            if self.terminate:
+                break
             time.sleep(0.5)
             if self.semaD._value == 1 and i == self.dermafinished.rowCount():
                 self.semaD.acquire(self)
@@ -292,6 +307,8 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
                 self.addglobaltables(data)  # global inprocess
                 counter = data['estime']
                 while counter >= 0:
+                    if self.terminate:
+                        break
                     time.sleep(1)
                     self.dermatime.setText(str(counter))
                     counter -= 1
@@ -308,32 +325,26 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
             self.dermaname.setText('Finished!')
             self.dermatime.setText('0')
 
-    def monitoring(self):
-        while self.prog_status == True or len(self.threads) > 0:
-            try:
-                for thread in self.threads:
-                    if thread.info['status'] == 'waiting':
-                        self.addtableshome()
-            except:
-                pass
-
     def schedualing_ortho(self):
         for i, per in enumerate(self.doctor_review['o']):
             per['status'] = 'waiting'
             runthrd = threading.Thread(target=self.patientO, args=(per, i,))
             runthrd.start()
+            self.threads.append(runthrd)
 
     def schedualing_cardio(self):
         for i, per in enumerate(self.doctor_review['c']):
             per['status'] = 'waiting'
             runthrd = threading.Thread(target=self.patientC, args=(per, i,))
             runthrd.start()
+            self.threads.append(runthrd)
 
     def schedualing_dema(self):
         for i, per in enumerate(self.doctor_review['d']):
             per['status'] = 'waiting'
             runthrd = threading.Thread(target=self.patientD, args=(per, i,))
             runthrd.start()
+            self.threads.append(runthrd)
 
     def schedualing_treatment(self):
         pass
@@ -357,23 +368,16 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
     def mainprocess(self):
         self.pushButton.setEnabled(False)
         self.pushButton.setText('Started !')
-        # monitor all threads
-        # self.monitoring()
-        # get dummy data for testing
-        e_data = getData()
-
         # using fork to process parent and child processes
         e_value = os.fork()
-
         # check the value to know parent or child
         # parent for doctor review proces and
         # child for treatment process in total
         # two process
-
         if e_value > 0:
             # parent process
             print("parent")
-            for patient_data in e_data:
+            for patient_data in self.e_data:
                 if patient_data['type'] == 0:
                     if patient_data['review'] == 'o':
                         self.doctor_review['o'].append(patient_data)
@@ -400,13 +404,15 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
             tr3 = threading.Thread(target=self.schedualing_ortho())
             tr3.start()
         elif e_value == 0:
+            self.tmpc.clear()
             print("child")
-            for patient_data in e_data:
+            for patient_data in self.e_data:
                 if patient_data['type'] == 1:
                     self.treatments.append(patient_data)
             self.treatments = self.preparepatients(self.treatments)
-            print(len(self.treatments))
-            self.tmpc.setText(str(len(self.treatments)))
+            alltmpc = str(len(self.treatments))
+            print(alltmpc)
+            self.tmpc.setText(alltmpc)
         else:
             print("Couldn't handle fork!")
 
