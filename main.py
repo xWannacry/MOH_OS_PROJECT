@@ -2550,6 +2550,7 @@ class Ui_MainWindow(object):
         self.gm1using.setGeometry(QRect(10, 110, 531, 81))
         self.gm1using.setFont(font2)
         self.gm1using.setStyleSheet(u"background-color: rgb(45, 50, 55);")
+        self.gm1using.horizontalHeader().setDefaultSectionSize(130)
         self.gm1stat = QLabel(self.frame_10)
         self.gm1stat.setObjectName(u"gm1stat")
         self.gm1stat.setGeometry(QRect(160, 80, 141, 16))
@@ -2585,6 +2586,7 @@ class Ui_MainWindow(object):
         self.gm1max.setGeometry(QRect(10, 210, 531, 81))
         self.gm1max.setFont(font2)
         self.gm1max.setStyleSheet(u"background-color: rgb(45, 50, 55);")
+        self.gm1max.horizontalHeader().setDefaultSectionSize(129)
         self.frame_11 = QFrame(self.tab)
         self.frame_11.setObjectName(u"frame_11")
         self.frame_11.setGeometry(QRect(610, 410, 551, 311))
@@ -2650,6 +2652,7 @@ class Ui_MainWindow(object):
         self.gm2using.setGeometry(QRect(10, 110, 531, 81))
         self.gm2using.setFont(font2)
         self.gm2using.setStyleSheet(u"background-color: rgb(45, 50, 55);")
+        self.gm2using.horizontalHeader().setDefaultSectionSize(129)
         self.gm2stat = QLabel(self.frame_11)
         self.gm2stat.setObjectName(u"gm2stat")
         self.gm2stat.setGeometry(QRect(160, 80, 141, 16))
@@ -2685,6 +2688,7 @@ class Ui_MainWindow(object):
         self.gm2max.setGeometry(QRect(10, 210, 531, 81))
         self.gm2max.setFont(font2)
         self.gm2max.setStyleSheet(u"background-color: rgb(45, 50, 55);")
+        self.gm2max.horizontalHeader().setDefaultSectionSize(129)
         self.frame_12 = QFrame(self.tab)
         self.frame_12.setObjectName(u"frame_12")
         self.frame_12.setGeometry(QRect(1210, 410, 551, 311))
@@ -2750,6 +2754,7 @@ class Ui_MainWindow(object):
         self.gm3using.setGeometry(QRect(10, 110, 531, 81))
         self.gm3using.setFont(font2)
         self.gm3using.setStyleSheet(u"background-color: rgb(45, 50, 55);")
+        self.gm3using.horizontalHeader().setDefaultSectionSize(129)
         self.gm3stat = QLabel(self.frame_12)
         self.gm3stat.setObjectName(u"gm3stat")
         self.gm3stat.setGeometry(QRect(160, 80, 141, 16))
@@ -2785,6 +2790,7 @@ class Ui_MainWindow(object):
         self.gm3max.setGeometry(QRect(10, 210, 531, 81))
         self.gm3max.setFont(font2)
         self.gm3max.setStyleSheet(u"background-color: rgb(45, 50, 55);")
+        self.gm3max.horizontalHeader().setDefaultSectionSize(129)
         self.frame_13 = QFrame(self.tab)
         self.frame_13.setObjectName(u"frame_13")
         self.frame_13.setGeometry(QRect(10, 10, 1751, 381))
@@ -2832,8 +2838,8 @@ class Ui_MainWindow(object):
         self.label_45.setFont(font3)
         self.label_45.setAlignment(Qt.AlignCenter)
         self.treatwaiting = QTableWidget(self.frame_13)
-        if (self.treatwaiting.columnCount() < 4):
-            self.treatwaiting.setColumnCount(4)
+        if (self.treatwaiting.columnCount() < 5):
+            self.treatwaiting.setColumnCount(5)
         __qtablewidgetitem88 = QTableWidgetItem()
         self.treatwaiting.setHorizontalHeaderItem(0, __qtablewidgetitem88)
         __qtablewidgetitem89 = QTableWidgetItem()
@@ -2842,21 +2848,25 @@ class Ui_MainWindow(object):
         self.treatwaiting.setHorizontalHeaderItem(2, __qtablewidgetitem90)
         __qtablewidgetitem91 = QTableWidgetItem()
         self.treatwaiting.setHorizontalHeaderItem(3, __qtablewidgetitem91)
+        __qtablewidgetitem92 = QTableWidgetItem()
+        self.treatwaiting.setHorizontalHeaderItem(4, __qtablewidgetitem92)
         self.treatwaiting.setObjectName(u"treatwaiting")
         self.treatwaiting.setGeometry(QRect(610, 70, 561, 281))
         self.treatwaiting.setFont(font2)
         self.treatwaiting.setStyleSheet(u"background-color: rgb(45, 50, 55);")
         self.treatfinish = QTableWidget(self.frame_13)
-        if (self.treatfinish.columnCount() < 4):
-            self.treatfinish.setColumnCount(4)
-        __qtablewidgetitem92 = QTableWidgetItem()
-        self.treatfinish.setHorizontalHeaderItem(0, __qtablewidgetitem92)
+        if (self.treatfinish.columnCount() < 5):
+            self.treatfinish.setColumnCount(5)
         __qtablewidgetitem93 = QTableWidgetItem()
-        self.treatfinish.setHorizontalHeaderItem(1, __qtablewidgetitem93)
+        self.treatfinish.setHorizontalHeaderItem(0, __qtablewidgetitem93)
         __qtablewidgetitem94 = QTableWidgetItem()
-        self.treatfinish.setHorizontalHeaderItem(2, __qtablewidgetitem94)
+        self.treatfinish.setHorizontalHeaderItem(1, __qtablewidgetitem94)
         __qtablewidgetitem95 = QTableWidgetItem()
-        self.treatfinish.setHorizontalHeaderItem(3, __qtablewidgetitem95)
+        self.treatfinish.setHorizontalHeaderItem(2, __qtablewidgetitem95)
+        __qtablewidgetitem96 = QTableWidgetItem()
+        self.treatfinish.setHorizontalHeaderItem(3, __qtablewidgetitem96)
+        __qtablewidgetitem97 = QTableWidgetItem()
+        self.treatfinish.setHorizontalHeaderItem(4, __qtablewidgetitem97)
         self.treatfinish.setObjectName(u"treatfinish")
         self.treatfinish.setGeometry(QRect(1180, 70, 561, 281))
         self.treatfinish.setFont(font2)
@@ -2874,30 +2884,31 @@ class Ui_MainWindow(object):
         self.bankeravbl = QTableWidget(self.frame_13)
         if (self.bankeravbl.columnCount() < 3):
             self.bankeravbl.setColumnCount(3)
-        __qtablewidgetitem96 = QTableWidgetItem()
-        __qtablewidgetitem96.setTextAlignment(Qt.AlignCenter);
-        self.bankeravbl.setHorizontalHeaderItem(0, __qtablewidgetitem96)
-        __qtablewidgetitem97 = QTableWidgetItem()
-        self.bankeravbl.setHorizontalHeaderItem(1, __qtablewidgetitem97)
         __qtablewidgetitem98 = QTableWidgetItem()
-        self.bankeravbl.setHorizontalHeaderItem(2, __qtablewidgetitem98)
+        __qtablewidgetitem98.setTextAlignment(Qt.AlignCenter);
+        self.bankeravbl.setHorizontalHeaderItem(0, __qtablewidgetitem98)
+        __qtablewidgetitem99 = QTableWidgetItem()
+        self.bankeravbl.setHorizontalHeaderItem(1, __qtablewidgetitem99)
+        __qtablewidgetitem100 = QTableWidgetItem()
+        self.bankeravbl.setHorizontalHeaderItem(2, __qtablewidgetitem100)
         if (self.bankeravbl.rowCount() < 1):
             self.bankeravbl.setRowCount(1)
-        __qtablewidgetitem99 = QTableWidgetItem()
-        self.bankeravbl.setVerticalHeaderItem(0, __qtablewidgetitem99)
-        __qtablewidgetitem100 = QTableWidgetItem()
-        __qtablewidgetitem100.setTextAlignment(Qt.AlignCenter);
-        self.bankeravbl.setItem(0, 0, __qtablewidgetitem100)
         __qtablewidgetitem101 = QTableWidgetItem()
-        __qtablewidgetitem101.setTextAlignment(Qt.AlignCenter);
-        self.bankeravbl.setItem(0, 1, __qtablewidgetitem101)
+        self.bankeravbl.setVerticalHeaderItem(0, __qtablewidgetitem101)
         __qtablewidgetitem102 = QTableWidgetItem()
         __qtablewidgetitem102.setTextAlignment(Qt.AlignCenter);
-        self.bankeravbl.setItem(0, 2, __qtablewidgetitem102)
+        self.bankeravbl.setItem(0, 0, __qtablewidgetitem102)
+        __qtablewidgetitem103 = QTableWidgetItem()
+        __qtablewidgetitem103.setTextAlignment(Qt.AlignCenter);
+        self.bankeravbl.setItem(0, 1, __qtablewidgetitem103)
+        __qtablewidgetitem104 = QTableWidgetItem()
+        __qtablewidgetitem104.setTextAlignment(Qt.AlignCenter);
+        self.bankeravbl.setItem(0, 2, __qtablewidgetitem104)
         self.bankeravbl.setObjectName(u"bankeravbl")
         self.bankeravbl.setGeometry(QRect(10, 270, 591, 81))
         self.bankeravbl.setFont(font2)
         self.bankeravbl.setStyleSheet(u"background-color: rgb(45, 50, 55);")
+        self.bankeravbl.horizontalHeader().setDefaultSectionSize(129)
         self.label_71 = QLabel(self.frame_13)
         self.label_71.setObjectName(u"label_71")
         self.label_71.setGeometry(QRect(10, 240, 531, 20))
@@ -2925,7 +2936,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(2)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -3220,33 +3231,37 @@ class Ui_MainWindow(object):
         ___qtablewidgetitem90.setText(QCoreApplication.translate("MainWindow", u"DOI", None));
         ___qtablewidgetitem91 = self.treatwaiting.horizontalHeaderItem(3)
         ___qtablewidgetitem91.setText(QCoreApplication.translate("MainWindow", u"STATUS", None));
-        ___qtablewidgetitem92 = self.treatfinish.horizontalHeaderItem(0)
-        ___qtablewidgetitem92.setText(QCoreApplication.translate("MainWindow", u"ID", None));
-        ___qtablewidgetitem93 = self.treatfinish.horizontalHeaderItem(1)
-        ___qtablewidgetitem93.setText(QCoreApplication.translate("MainWindow", u"NAME", None));
-        ___qtablewidgetitem94 = self.treatfinish.horizontalHeaderItem(2)
-        ___qtablewidgetitem94.setText(QCoreApplication.translate("MainWindow", u"DOI", None));
-        ___qtablewidgetitem95 = self.treatfinish.horizontalHeaderItem(3)
-        ___qtablewidgetitem95.setText(QCoreApplication.translate("MainWindow", u"STATUS", None));
+        ___qtablewidgetitem92 = self.treatwaiting.horizontalHeaderItem(4)
+        ___qtablewidgetitem92.setText(QCoreApplication.translate("MainWindow", u"MAX", None));
+        ___qtablewidgetitem93 = self.treatfinish.horizontalHeaderItem(0)
+        ___qtablewidgetitem93.setText(QCoreApplication.translate("MainWindow", u"ID", None));
+        ___qtablewidgetitem94 = self.treatfinish.horizontalHeaderItem(1)
+        ___qtablewidgetitem94.setText(QCoreApplication.translate("MainWindow", u"NAME", None));
+        ___qtablewidgetitem95 = self.treatfinish.horizontalHeaderItem(2)
+        ___qtablewidgetitem95.setText(QCoreApplication.translate("MainWindow", u"DOI", None));
+        ___qtablewidgetitem96 = self.treatfinish.horizontalHeaderItem(3)
+        ___qtablewidgetitem96.setText(QCoreApplication.translate("MainWindow", u"STATUS", None));
+        ___qtablewidgetitem97 = self.treatfinish.horizontalHeaderItem(4)
+        ___qtablewidgetitem97.setText(QCoreApplication.translate("MainWindow", u"MAX", None));
         self.label_62.setText(QCoreApplication.translate("MainWindow", u"Waiting", None))
         self.label_63.setText(QCoreApplication.translate("MainWindow", u"Finished", None))
-        ___qtablewidgetitem96 = self.bankeravbl.horizontalHeaderItem(0)
-        ___qtablewidgetitem96.setText(QCoreApplication.translate("MainWindow", u"Medical nutrition", None));
-        ___qtablewidgetitem97 = self.bankeravbl.horizontalHeaderItem(1)
-        ___qtablewidgetitem97.setText(QCoreApplication.translate("MainWindow", u"Steam device", None));
-        ___qtablewidgetitem98 = self.bankeravbl.horizontalHeaderItem(2)
-        ___qtablewidgetitem98.setText(QCoreApplication.translate("MainWindow", u"Injections", None));
-        ___qtablewidgetitem99 = self.bankeravbl.verticalHeaderItem(0)
-        ___qtablewidgetitem99.setText(QCoreApplication.translate("MainWindow", u"Using resources : ", None));
+        ___qtablewidgetitem98 = self.bankeravbl.horizontalHeaderItem(0)
+        ___qtablewidgetitem98.setText(QCoreApplication.translate("MainWindow", u"Medical nutrition", None));
+        ___qtablewidgetitem99 = self.bankeravbl.horizontalHeaderItem(1)
+        ___qtablewidgetitem99.setText(QCoreApplication.translate("MainWindow", u"Steam device", None));
+        ___qtablewidgetitem100 = self.bankeravbl.horizontalHeaderItem(2)
+        ___qtablewidgetitem100.setText(QCoreApplication.translate("MainWindow", u"Injections", None));
+        ___qtablewidgetitem101 = self.bankeravbl.verticalHeaderItem(0)
+        ___qtablewidgetitem101.setText(QCoreApplication.translate("MainWindow", u"Using resources : ", None));
 
         __sortingEnabled6 = self.bankeravbl.isSortingEnabled()
         self.bankeravbl.setSortingEnabled(False)
-        ___qtablewidgetitem100 = self.bankeravbl.item(0, 0)
-        ___qtablewidgetitem100.setText(QCoreApplication.translate("MainWindow", u"0", None));
-        ___qtablewidgetitem101 = self.bankeravbl.item(0, 1)
-        ___qtablewidgetitem101.setText(QCoreApplication.translate("MainWindow", u"0", None));
-        ___qtablewidgetitem102 = self.bankeravbl.item(0, 2)
+        ___qtablewidgetitem102 = self.bankeravbl.item(0, 0)
         ___qtablewidgetitem102.setText(QCoreApplication.translate("MainWindow", u"0", None));
+        ___qtablewidgetitem103 = self.bankeravbl.item(0, 1)
+        ___qtablewidgetitem103.setText(QCoreApplication.translate("MainWindow", u"0", None));
+        ___qtablewidgetitem104 = self.bankeravbl.item(0, 2)
+        ___qtablewidgetitem104.setText(QCoreApplication.translate("MainWindow", u"0", None));
         self.bankeravbl.setSortingEnabled(__sortingEnabled6)
 
         self.label_71.setText(QCoreApplication.translate("MainWindow", u"Available Resources", None))

@@ -1948,7 +1948,7 @@ QMessageBox QPushButton
        </font>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="HOMETAP">
        <attribute name="title">
@@ -3780,6 +3780,9 @@ background-color: rgb(40, 45, 50);
          <property name="styleSheet">
           <string notr="true">background-color: rgb(45, 50, 55);</string>
          </property>
+         <attribute name="horizontalHeaderDefaultSectionSize">
+          <number>130</number>
+         </attribute>
          <row>
           <property name="text">
            <string>Using resources : </string>
@@ -3888,6 +3891,9 @@ background-color: rgb(40, 45, 50);
          <property name="styleSheet">
           <string notr="true">background-color: rgb(45, 50, 55);</string>
          </property>
+         <attribute name="horizontalHeaderDefaultSectionSize">
+          <number>129</number>
+         </attribute>
          <row>
           <property name="text">
            <string>Max :</string>
@@ -4097,6 +4103,9 @@ background-color: rgb(40, 45, 50);
          <property name="styleSheet">
           <string notr="true">background-color: rgb(45, 50, 55);</string>
          </property>
+         <attribute name="horizontalHeaderDefaultSectionSize">
+          <number>129</number>
+         </attribute>
          <row>
           <property name="text">
            <string>Using resources : </string>
@@ -4205,6 +4214,9 @@ background-color: rgb(40, 45, 50);
          <property name="styleSheet">
           <string notr="true">background-color: rgb(45, 50, 55);</string>
          </property>
+         <attribute name="horizontalHeaderDefaultSectionSize">
+          <number>129</number>
+         </attribute>
          <row>
           <property name="text">
            <string>Max :</string>
@@ -4414,6 +4426,9 @@ background-color: rgb(40, 45, 50);
          <property name="styleSheet">
           <string notr="true">background-color: rgb(45, 50, 55);</string>
          </property>
+         <attribute name="horizontalHeaderDefaultSectionSize">
+          <number>129</number>
+         </attribute>
          <row>
           <property name="text">
            <string>Using resources : </string>
@@ -4522,6 +4537,9 @@ background-color: rgb(40, 45, 50);
          <property name="styleSheet">
           <string notr="true">background-color: rgb(45, 50, 55);</string>
          </property>
+         <attribute name="horizontalHeaderDefaultSectionSize">
+          <number>129</number>
+         </attribute>
          <row>
           <property name="text">
            <string>Max :</string>
@@ -4734,6 +4752,11 @@ QFrame:hover
            <string>STATUS</string>
           </property>
          </column>
+         <column>
+          <property name="text">
+           <string>MAX</string>
+          </property>
+         </column>
         </widget>
         <widget class="QTableWidget" name="treatfinish">
          <property name="geometry">
@@ -4770,6 +4793,11 @@ QFrame:hover
          <column>
           <property name="text">
            <string>STATUS</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>MAX</string>
           </property>
          </column>
         </widget>
@@ -4838,6 +4866,9 @@ QFrame:hover
          <property name="styleSheet">
           <string notr="true">background-color: rgb(45, 50, 55);</string>
          </property>
+         <attribute name="horizontalHeaderDefaultSectionSize">
+          <number>129</number>
+         </attribute>
          <row>
           <property name="text">
            <string>Using resources : </string>
