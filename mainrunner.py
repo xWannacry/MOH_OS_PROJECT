@@ -27,6 +27,9 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
         self.exitbutton.clicked.connect(self.exitprogram)
 
     def exitprogram(self):
+        self.semaD.release()
+        self.semaO.release()
+        self.semaC.release()
         self.close()
         exit()
 
@@ -402,6 +405,7 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
                 if patient_data['type'] == 1:
                     self.treatments.append(patient_data)
             self.treatments = self.preparepatients(self.treatments)
+            print(len(self.treatments))
             self.tmpc.setText(str(len(self.treatments)))
         else:
             print("Couldn't handle fork!")
