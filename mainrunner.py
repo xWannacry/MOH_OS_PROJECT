@@ -402,7 +402,6 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
         self.treatments = self.shared_qeue.get()
         self.tmpc.setText(str(len(self.treatments)))
 
-
     def mainprocess(self):
         self.pushButton.setEnabled(False)
         self.pushButton.setText('Started !')
