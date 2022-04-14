@@ -12,6 +12,6 @@ Operating System Course | Project FALL22
 ![Treatment Page](https://user-images.githubusercontent.com/101018825/163274241-342efda7-4627-48ac-b0be-997ca95caa03.png)
 
 + **Libararies we used**:
-  * pyqt5
-  * pyqt5-tools
-  * pyside2
+  * numpy
+  * PyQt5 + PySide2
+  * multiprocessing
