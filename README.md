@@ -18,6 +18,6 @@ A simulation of os services and process of ministry of health as a hospital proc
   * multiprocessing
 
 + **Done by**:
-+  * Mahmood Humaid
-+  * Al Munder Al Mamari
-+  * Azhar Jalal
+   * Mahmood Humaid
+   * Al Munder Al Mamari
+   * Azhar Jalal
