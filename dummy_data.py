@@ -52,6 +52,16 @@ dummydata = [{'tid': '', 'name': 'Amal', 'doi': 2, 'estime': 18, 'type': 1, 'sta
              {'tid': '', 'name': 'Jaleel', 'doi': 5, 'estime': 19, 'type': 1, 'status': '', 'resources': [9, 0, 0]},
              {'tid': '', 'name': 'Jawad', 'doi': 2, 'estime': 18, 'type': 1, 'status': '', 'resources': [2, 3, 4]}]
 
+treat_data = [{'tid': '', 'name': 'Amal', 'doi': 5, 'estime': 13, 'type': 1, 'status': '', 'resources': [7, 5, 3],
+         'allocated': [0, 1, 0]},
+        {'tid': '', 'name': 'Amani', 'doi': 3, 'estime': 18, 'type': 1, 'status': '', 'resources': [3, 2, 2],
+         'allocated': [2, 0, 0]},
+        {'tid': '', 'name': 'Amira', 'doi': 8, 'estime': 18, 'type': 1, 'status': '', 'resources': [9, 0, 2],
+         'allocated': [3, 0, 2]},
+        {'tid': '', 'name': 'Arwa', 'doi': 1, 'estime': 16, 'type': 1, 'status': '', 'resources': [2, 2, 2],
+         'allocated':[2, 1, 1]},
+        {'tid': '', 'name': 'Aya', 'doi': 9, 'estime': 15, 'type': 1, 'status': '', 'resources':  [4, 3, 3],
+         'allocated':  [0, 0, 2]}]
 
 def getData():
     names = ['Amal', 'Amani', 'Amira', 'Arwa', 'Aya', 'Abbas', 'Abdul', 'Abid', 'Adil', 'Adam', 'Adib', 'Adnan', 'Afif',

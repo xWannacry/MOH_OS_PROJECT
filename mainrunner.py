@@ -21,7 +21,7 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
         self.terminate = False
         self.avbl_rooms = 3
         self.threads = []
-        self.treatments = []
+        self.treatments = treat_data
         self.treat_avbl = []
         # data[0] is patients | data[1] is resources integers | data[2] is available resources
         self.e_data = getData()
@@ -399,15 +399,15 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
             self.dermatime.setText('0')
 
     def eligible(self, data):
-        using = list(np.array(data['resources']) - np.array(data['allocated']))  # list
+        using = list(np.array(data['resources']) - np.array(data['allocated']))
         rtval = np.all(np.asarray(using) <= np.asarray(self.treat_avbl))  # bool
         if rtval:
             self.treat_avbl = list(np.array(self.treat_avbl) - np.array(using))  # list
             self.updateavailable()
         return rtval
 
-    def addalocated(self, data):
-        self.treat_avbl = list(np.array(self.treat_avbl) + np.array(data['allocated']))  # list
+    def update_available(self, data):
+        self.treat_avbl = data
         self.updateavailable()
 
     def updateroom(self, data, i):
@@ -499,18 +499,19 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
 
     def patientT(self, data, i):
         data['tid'] = threading.get_native_id()
-        data['allocated'] = [random.randint(2, int(data['resources'][0])+2),
-                             random.randint(2, int(data['resources'][1])+2),
-                             random.randint(2, int(data['resources'][2])+2)]
-        print(data['allocated'])
         self.addglobaltables(data)  # global waiting
         self.addtreattables(data)  # treat waiting
         while True:
             if self.terminate:
                 break
             time.sleep(0.5)
+            last = self.treat_avbl
             if self.sema1._value == 1 and self.eligible(data) == True:
                 self.sema1.acquire(self)
+                using = list(np.array(data['resources']) - np.array(data['allocated']))
+                addlast = list(np.array(last) - np.array(using))
+                final = list(data['resources'] + np.array(addlast))
+                print(final)
                 self.updateroom(data, 0)
                 self.updatedetails(data, 0)
                 self.gm1name.setText(data['name'])
@@ -531,11 +532,13 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
                 # show in finished globa/derma
                 self.addglobaltables(data)  # finished global add
                 self.addtreattables(data)  # finished derma add
-                self.addalocated(data)
+                self.update_available(final)
                 self.sema1.release()
                 break
             elif self.sema2._value == 1 and self.eligible(data) == True:
                 self.sema2.acquire(self)
+                using = list(np.array(data['resources']) - np.array(data['allocated']))
+                addlast = list(np.array(last) - np.array(using))
                 self.updateroom(data, 1)
                 self.updatedetails(data, 1)
                 self.gm2name.setText(data['name'])
@@ -556,11 +559,13 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
                 # show in finished globa/derma
                 self.addglobaltables(data)  # finished global add
                 self.addtreattables(data)  # finished derma add
-                self.addalocated(data)
+                self.update_available(addlast)
                 self.sema2.release()
                 break
             elif self.sema3._value == 1 and self.eligible(data) == True:
                 self.sema3.acquire(self)
+                using = list(np.array(data['resources']) - np.array(data['allocated']))
+                addlast = list(np.array(last) - np.array(using))
                 self.updateroom(data, 2)
                 self.updatedetails(data, 2)
                 self.gm3name.setText(data['name'])
@@ -581,7 +586,7 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
                 # show in finished globa/treat
                 self.addglobaltables(data)  # finished global add
                 self.addtreattables(data)  # finished treat add
-                self.addalocated(data)
+                self.update_available(addlast)
                 self.sema3.release()
                 break
         if self.treatwaiting.rowCount() == 0:
@@ -624,10 +629,7 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
     def mainprocess(self):
         self.pushButton.setEnabled(False)
         self.pushButton.setText('Started !')
-        self.treat_avbl = self.e_data[2]
-        self.treat_avbl[0] += 5
-        self.treat_avbl[1] += 5
-        self.treat_avbl[2] += 5
+        self.treat_avbl = [3, 3, 2]
         # using fork to process parent and child processes
         e_value = os.fork()
 
@@ -666,10 +668,6 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
             tr4 = threading.Thread(target=self.schedualing_treatment())
             tr4.start()
         elif e_value == 0:
-            for patient_data in self.e_data[0]:
-                if patient_data['type'] == 1:
-                    self.treatments.append(patient_data)
-            self.treatments = self.preparepatients(self.treatments)
             self.shared_qeue.put(self.treatments)
         else:
             print("Couldn't handle fork!")
