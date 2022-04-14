@@ -1,4 +1,5 @@
 import multiprocessing
+import random
 from threading import Semaphore
 import threading
 import time
@@ -9,6 +10,7 @@ from PyQt5.QtCore import *
 from dummy_data import *
 import main
 import os
+import numpy as np
 
 
 class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
@@ -17,8 +19,10 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
         super(MyQtApp, self).__init__()
         self.shared_qeue = multiprocessing.Queue()
         self.terminate = False
+        self.avbl_rooms = 3
         self.threads = []
         self.treatments = []
+        self.treat_avbl = []
         # data[0] is patients | data[1] is resources integers | data[2] is available resources
         self.e_data = getData()
         self.doctor_review = {'o': [], 'c': [], 'd': []}
@@ -27,6 +31,9 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
         self.semaC = Semaphore(1)
         self.semaD = Semaphore(1)
         self.semaO = Semaphore(1)
+        self.sema1 = Semaphore(1)
+        self.sema2 = Semaphore(1)
+        self.sema3 = Semaphore(1)
         self.showMaximized()
         self.setWindowIcon(QtGui.QIcon("images/logo.png"))
         self.pushButton.clicked.connect(self.mainprocess)
@@ -82,8 +89,25 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
         self.statlblinproc.setText(str(self.statinproc.rowCount()))
         self.statlblfinish.setText(str(self.statfinish.rowCount()))
 
+    def updateroomsandwainting(self, itm):
+        try:
+            matching_items4 = self.treatwaiting.findItems(str(itm['tid']), ss.Qt.MatchContains)
+            if matching_items4:
+                rmv1 = matching_items4[0].row()
+                self.treatwaiting.removeRow(rmv1)
+        except:
+            pass
+
     def updateavailable(self):
-        pass
+        item1 = QtWidgets.QTableWidgetItem(str(self.treat_avbl[0]))
+        item1.setTextAlignment(Qt.AlignCenter)
+        item2 = QtWidgets.QTableWidgetItem(str(self.treat_avbl[1]))
+        item2.setTextAlignment(Qt.AlignCenter)
+        item3 = QtWidgets.QTableWidgetItem(str(self.treat_avbl[2]))
+        item3.setTextAlignment(Qt.AlignCenter)
+        self.bankeravbl.setItem(0, 0, item1)
+        self.bankeravbl.setItem(0, 1, item2)
+        self.bankeravbl.setItem(0, 2, item3)
 
     def addglobaltables(self, itm):
         typeof = itm['status']
@@ -203,6 +227,41 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
                 self.dermafinished.setItem(row, 1, item2)
                 self.dermafinished.setItem(row, 2, item3)
                 self.dermafinished.setItem(row, 3, item4)
+                return row
+
+    def addtreattables(self, itm):
+        typeof = itm['status']
+        item1 = QtWidgets.QTableWidgetItem(str(itm['tid']))
+        item1.setTextAlignment(Qt.AlignCenter)
+        item2 = QtWidgets.QTableWidgetItem(str(itm['name']))
+        item2.setTextAlignment(Qt.AlignCenter)
+        item3 = QtWidgets.QTableWidgetItem(str(itm['doi']))
+        item3.setTextAlignment(Qt.AlignCenter)
+        item4 = QtWidgets.QTableWidgetItem(str(itm['status']))
+        item4.setTextAlignment(Qt.AlignCenter)
+        item5 = QtWidgets.QTableWidgetItem(str(itm['resources']))
+        item5.setTextAlignment(Qt.AlignCenter)
+        if typeof == 'waiting':
+            matching_items3 = self.treatwaiting.findItems(str(itm['tid']), ss.Qt.MatchContains)
+            if not matching_items3:
+                row = self.treatwaiting.rowCount()
+                self.treatwaiting.setRowCount(row + 1)
+                self.treatwaiting.setItem(row, 0, item1)
+                self.treatwaiting.setItem(row, 1, item2)
+                self.treatwaiting.setItem(row, 2, item3)
+                self.treatwaiting.setItem(row, 3, item4)
+                self.treatwaiting.setItem(row, 4, item5)
+                return row
+        elif typeof == 'finished':
+            matching_items1 = self.treatfinish.findItems(str(itm['tid']), ss.Qt.MatchContains)
+            if not matching_items1:
+                row = self.treatfinish.rowCount()
+                self.treatfinish.setRowCount(row + 1)
+                self.treatfinish.setItem(row, 0, item1)
+                self.treatfinish.setItem(row, 1, item2)
+                self.treatfinish.setItem(row, 2, item3)
+                self.treatfinish.setItem(row, 3, item4)
+                self.treatfinish.setItem(row, 4, item5)
                 return row
 
     def addcardiotables(self, itm):
@@ -339,17 +398,124 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
             self.dermaname.setText('Finished!')
             self.dermatime.setText('0')
 
+    def eligible(self, data):
+        using = list(np.array(data['resources']) - np.array(data['allocated']))  # list
+        rtval = np.all(np.asarray(using) <= np.asarray(self.treat_avbl))  # bool
+        if rtval:
+            self.treat_avbl = list(np.array(self.treat_avbl) - np.array(using))  # list
+            self.updateavailable()
+        return rtval
+
+    def addalocated(self, data):
+        self.treat_avbl = list(np.array(self.treat_avbl) + np.array(data['allocated']))  # list
+        self.updateavailable()
+
+    def updateroom(self, data, i):
+        item1 = QtWidgets.QTableWidgetItem(str(data['tid']))
+        item1.setTextAlignment(Qt.AlignCenter)
+        item2 = QtWidgets.QTableWidgetItem(str(data['name']))
+        item2.setTextAlignment(Qt.AlignCenter)
+        item3 = QtWidgets.QTableWidgetItem(str(data['resources']))
+        item3.setTextAlignment(Qt.AlignCenter)
+        item4 = QtWidgets.QTableWidgetItem(str(data['doi']))
+        item4.setTextAlignment(Qt.AlignCenter)
+        self.bankeralgo.setItem(i, 0, item1)
+        self.bankeralgo.setItem(i, 1, item2)
+        self.bankeralgo.setItem(i, 2, item3)
+        self.bankeralgo.setItem(i, 3, item4)
+
+    def updatedetails(self, data, ix):
+        iz = 0
+        using = list(np.array(data['resources']) - np.array(data['allocated']))
+        item1 = QtWidgets.QTableWidgetItem(str(using[0]))
+        item1.setTextAlignment(Qt.AlignCenter)
+        item2 = QtWidgets.QTableWidgetItem(str(using[1]))
+        item2.setTextAlignment(Qt.AlignCenter)
+        item3 = QtWidgets.QTableWidgetItem(str(using[2]))
+        item3.setTextAlignment(Qt.AlignCenter)
+        max1 = QtWidgets.QTableWidgetItem(str(data['resources'][0]))
+        max1.setTextAlignment(Qt.AlignCenter)
+        max2 = QtWidgets.QTableWidgetItem(str(data['resources'][1]))
+        max2.setTextAlignment(Qt.AlignCenter)
+        max3 = QtWidgets.QTableWidgetItem(str(data['resources'][2]))
+        max3.setTextAlignment(Qt.AlignCenter)
+        if ix == 0:
+            self.gm1using.setItem(iz, 0, item1)
+            self.gm1using.setItem(iz, 1, item2)
+            self.gm1using.setItem(iz, 2, item3)
+            self.gm1max.setItem(iz, 0, max1)
+            self.gm1max.setItem(iz, 1, max2)
+            self.gm1max.setItem(iz, 2, max3)
+        elif ix == 1:
+            self.gm2using.setItem(iz, 0, item1)
+            self.gm2using.setItem(iz, 1, item2)
+            self.gm2using.setItem(iz, 2, item3)
+            self.gm2max.setItem(iz, 0, max1)
+            self.gm2max.setItem(iz, 1, max2)
+            self.gm2max.setItem(iz, 2, max3)
+        elif ix == 2:
+            self.gm3using.setItem(iz, 0, item1)
+            self.gm3using.setItem(iz, 1, item2)
+            self.gm3using.setItem(iz, 2, item3)
+            self.gm3max.setItem(iz, 0, max1)
+            self.gm3max.setItem(iz, 1, max2)
+            self.gm3max.setItem(iz, 2, max3)
+
+    def clearcounters(self, data):
+        item1 = QtWidgets.QTableWidgetItem(str(""))
+        item1.setTextAlignment(Qt.AlignCenter)
+        iz = 0
+        data['tid'] = ""
+        data['name'] = ""
+        data['doi'] = ""
+        data['resources'] = ""
+        self.updateroom(data, 0)
+        self.updateroom(data, 1)
+        self.updateroom(data, 2)
+        self.gm1name.setText('Finished!')
+        self.gm1time.setText('0')
+        self.gm2name.setText('Finished!')
+        self.gm2time.setText('0')
+        self.gm3name.setText('Finished!')
+        self.gm3time.setText('0')
+        self.gm1using.setItem(iz, 0, item1)
+        self.gm1using.setItem(iz, 1, item1)
+        self.gm1using.setItem(iz, 2, item1)
+        self.gm1max.setItem(iz, 0, item1)
+        self.gm1max.setItem(iz, 1, item1)
+        self.gm1max.setItem(iz, 2, item1)
+        self.gm2using.setItem(iz, 0, item1)
+        self.gm2using.setItem(iz, 1, item1)
+        self.gm2using.setItem(iz, 2, item1)
+        self.gm2max.setItem(iz, 0, item1)
+        self.gm2max.setItem(iz, 1, item1)
+        self.gm2max.setItem(iz, 2, item1)
+        self.gm3using.setItem(iz, 0, item1)
+        self.gm3using.setItem(iz, 1, item1)
+        self.gm3using.setItem(iz, 2, item1)
+        self.gm3max.setItem(iz, 0, item1)
+        self.gm3max.setItem(iz, 1, item1)
+        self.gm3max.setItem(iz, 2, item1)
+
     def patientT(self, data, i):
         data['tid'] = threading.get_native_id()
+        data['allocated'] = [random.randint(2, int(data['resources'][0])),
+                             random.randint(2, int(data['resources'][1])),
+                             random.randint(2, int(data['resources'][2]))]
+        print(data['allocated'])
         self.addglobaltables(data)  # global waiting
-        self.adddematables(data)  # derma waiting
+        self.addtreattables(data)  # traet waiting
+        selected = 0
         while True:
             if self.terminate:
                 break
             time.sleep(0.5)
-            if self.semaD._value == 1 and i == self.dermafinished.rowCount():
-                self.semaD.acquire(self)
-                self.dermaname.setText(data['name'])
+            if self.sema1._value == 1 and self.eligible(data) == True:
+                selected = 1
+                self.sema1.acquire(self)
+                self.updateroom(data, 0)
+                self.updatedetails(data, 0)
+                self.gm1name.setText(data['name'])
                 data['status'] = 'inprocess'
                 # show inprocess global
                 self.addglobaltables(data)  # global inprocess
@@ -358,20 +524,72 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
                     if self.terminate:
                         break
                     time.sleep(1)
-                    self.dermatime.setText(str(counter))
+                    self.gm1time.setText(str(counter))
                     counter -= 1
                 data['status'] = 'finished'
                 # delete from waiting global/derma
                 self.updatestat(data)
-                self.updatederma()  # derma remove waiting
+                self.updateroomsandwainting(data)  # remove waiting & room
                 # show in finished globa/derma
                 self.addglobaltables(data)  # finished global add
-                self.adddematables(data)  # finished derma add
-                self.semaD.release()
+                self.addtreattables(data)  # finished derma add
+                self.addalocated(data)
+                self.sema1.release()
                 break
-        if self.dermawaiting.rowCount() == 0:
-            self.dermaname.setText('Finished!')
-            self.dermatime.setText('0')
+            elif self.sema2._value == 1 and self.eligible(data) == True:
+                self.sema2.acquire(self)
+                selected = 2
+                self.updateroom(data, 1)
+                self.updatedetails(data, 1)
+                self.gm2name.setText(data['name'])
+                data['status'] = 'inprocess'
+                # show inprocess global
+                self.addglobaltables(data)  # global inprocess
+                counter = data['estime']
+                while counter >= 0:
+                    if self.terminate:
+                        break
+                    time.sleep(1)
+                    self.gm2time.setText(str(counter))
+                    counter -= 1
+                data['status'] = 'finished'
+                # delete from waiting global/derma
+                self.updatestat(data)
+                self.updateroomsandwainting(data)  # remove waiting & room
+                # show in finished globa/derma
+                self.addglobaltables(data)  # finished global add
+                self.addtreattables(data)  # finished derma add
+                self.addalocated(data)
+                self.sema2.release()
+                break
+            elif self.sema3._value == 1 and self.eligible(data) == True:
+                self.sema3.acquire(self)
+                selected = 3
+                self.updateroom(data, 2)
+                self.updatedetails(data, 2)
+                self.gm3name.setText(data['name'])
+                data['status'] = 'inprocess'
+                # show inprocess global
+                self.addglobaltables(data)  # global inprocess
+                counter = data['estime']
+                while counter >= 0:
+                    if self.terminate:
+                        break
+                    time.sleep(1)
+                    self.gm3time.setText(str(counter))
+                    counter -= 1
+                data['status'] = 'finished'
+                # delete from waiting global/derma
+                self.updatestat(data)
+                self.updateroomsandwainting(data)  # remove waiting & room
+                # show in finished globa/derma
+                self.addglobaltables(data)  # finished global add
+                self.addtreattables(data)  # finished derma add
+                self.addalocated(data)
+                self.sema3.release()
+                break
+        if self.treatwaiting.rowCount() == 0:
+            self.clearcounters(data)
 
     def schedualing_ortho(self):
         for i, per in enumerate(self.doctor_review['o']):
@@ -398,13 +616,22 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
         # waiting for shared data to be available
         while self.shared_qeue.empty():
             continue
-
+        self.updateavailable()
         self.treatments = self.shared_qeue.get()
         self.tmpc.setText(str(len(self.treatments)))
+        for i, per in enumerate(self.treatments):
+            per['status'] = 'waiting'
+            runthrd = threading.Thread(target=self.patientT, args=(per, i,))
+            runthrd.start()
+            self.threads.append(runthrd)
 
     def mainprocess(self):
         self.pushButton.setEnabled(False)
         self.pushButton.setText('Started !')
+        self.treat_avbl = self.e_data[2]
+        self.treat_avbl[0] += 5
+        self.treat_avbl[1] += 5
+        self.treat_avbl[2] += 5
         # using fork to process parent and child processes
         e_value = os.fork()
 
