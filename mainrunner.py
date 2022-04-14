@@ -499,19 +499,17 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
 
     def patientT(self, data, i):
         data['tid'] = threading.get_native_id()
-        data['allocated'] = [random.randint(2, int(data['resources'][0])),
-                             random.randint(2, int(data['resources'][1])),
-                             random.randint(2, int(data['resources'][2]))]
+        data['allocated'] = [random.randint(2, int(data['resources'][0])+2),
+                             random.randint(2, int(data['resources'][1])+2),
+                             random.randint(2, int(data['resources'][2])+2)]
         print(data['allocated'])
         self.addglobaltables(data)  # global waiting
-        self.addtreattables(data)  # traet waiting
-        selected = 0
+        self.addtreattables(data)  # treat waiting
         while True:
             if self.terminate:
                 break
             time.sleep(0.5)
             if self.sema1._value == 1 and self.eligible(data) == True:
-                selected = 1
                 self.sema1.acquire(self)
                 self.updateroom(data, 0)
                 self.updatedetails(data, 0)
@@ -538,7 +536,6 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
                 break
             elif self.sema2._value == 1 and self.eligible(data) == True:
                 self.sema2.acquire(self)
-                selected = 2
                 self.updateroom(data, 1)
                 self.updatedetails(data, 1)
                 self.gm2name.setText(data['name'])
@@ -564,7 +561,6 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
                 break
             elif self.sema3._value == 1 and self.eligible(data) == True:
                 self.sema3.acquire(self)
-                selected = 3
                 self.updateroom(data, 2)
                 self.updatedetails(data, 2)
                 self.gm3name.setText(data['name'])
@@ -579,12 +575,12 @@ class MyQtApp(main.Ui_MainWindow, QtWidgets.QMainWindow):
                     self.gm3time.setText(str(counter))
                     counter -= 1
                 data['status'] = 'finished'
-                # delete from waiting global/derma
+                # delete from waiting global/treat
                 self.updatestat(data)
                 self.updateroomsandwainting(data)  # remove waiting & room
-                # show in finished globa/derma
+                # show in finished globa/treat
                 self.addglobaltables(data)  # finished global add
-                self.addtreattables(data)  # finished derma add
+                self.addtreattables(data)  # finished treat add
                 self.addalocated(data)
                 self.sema3.release()
                 break

@@ -1,17 +1,23 @@
-# MOH_OS_PROJECT
+# MOH OS PROJECT
+- Operating System Course | Project FALL22
 
-Operating System Course | Project FALL22
+A simulation of os services and process of ministry of health as a hospital processing patients requests and scheduling them. Fork, scheduling algorithms and banker algorithms are used to manage the paitents requests.
 
 + **Home Page**
-![Home Page](https://user-images.githubusercontent.com/101018825/163274178-a229ba17-c6f4-4732-b47d-7324847990d3.png)
+![home](https://user-images.githubusercontent.com/101018825/163314878-d941c605-0bf0-4e70-af6e-bab279cf7d7c.png)
 
 + **Doctor Review Page**
-![Doctor Review Page](https://user-images.githubusercontent.com/101018825/163274234-3b282940-da51-45f1-8af5-4370adde1e23.png)
+![doctor_review](https://user-images.githubusercontent.com/101018825/163314892-c6fefa22-3696-45b4-a07c-d2db04c0952a.png)
 
 + **Treatment Page**
-![Treatment Page](https://user-images.githubusercontent.com/101018825/163274241-342efda7-4627-48ac-b0be-997ca95caa03.png)
+![treatment_process](https://user-images.githubusercontent.com/101018825/163314902-44c2b47b-e005-43f4-9df5-305fac8d5420.png)
 
 + **Libararies we used**:
   * numpy
   * PyQt5 + PySide2
   * multiprocessing
+
++ **Done by**:
+   * Mahmood Humaid
+   * Al Munder Al Mamari
+   * Azhar Jalal
